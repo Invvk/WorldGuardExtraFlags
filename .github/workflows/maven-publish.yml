@@ -14,5 +14,7 @@ jobs:
       with:
         java-version: '8'
         distribution: 'zulu'
-    - name: package the plugin
+    - name: install modules
+      run: mvn -B install --file pom.xml
+    - name: package spigot
       run: mvn -B package --file Spigot/pom.xml
