@@ -59,13 +59,12 @@ public interface WorldGuardCommunicator
 		flagRegistry.register(Flags.ITEM_DURABILITY);
 		flagRegistry.register(Flags.JOIN_LOCATION);
 
-		if (this.isLegacy())
-		{
+
 			flagRegistry.register(Flags.ALLOW_BLOCK_PLACE);
 			flagRegistry.register(Flags.DENY_BLOCK_PLACE);
 			flagRegistry.register(Flags.ALLOW_BLOCK_BREAK);
 			flagRegistry.register(Flags.DENY_BLOCK_BREAK);
-		}
+
 	}
 	
 	default public void onEnable(Plugin plugin) throws Exception
