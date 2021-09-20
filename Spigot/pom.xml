@@ -27,6 +27,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<relocations>
 						<relocation>
 							<pattern>org.bstats</pattern>
@@ -102,7 +103,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.goldtreeservers.worldguardextraflags</groupId>
-			<artifactId>spigot-1_14</artifactId>
+			<artifactId>WGEF-1_14_R1</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

@@ -31,253 +31,199 @@ import net.goldtreeservers.worldguardextraflags.wg.wrappers.WorldGuardCommunicat
 import net.goldtreeservers.worldguardextraflags.wg.wrappers.v6.WorldGuardSixCommunicator;
 import net.goldtreeservers.worldguardextraflags.wg.wrappers.v7.WorldGuardSevenCommunicator;
 
-public class WorldGuardExtraFlagsPlugin extends AbstractWorldGuardExtraFlagsPlugin
-{
-	@Getter private static WorldGuardExtraFlagsPlugin plugin;
-	
-	@Getter private WorldGuardPlugin worldGuardPlugin;
-	@Getter private WorldEditPlugin worldEditPlugin;
+public class WorldGuardExtraFlagsPlugin extends AbstractWorldGuardExtraFlagsPlugin {
+    @Getter
+    private static WorldGuardExtraFlagsPlugin plugin;
 
-	@Getter private EssentialsHelper essentialsHelper;
-	@Getter private FAWEHelper faweHelper;
-	@Getter private ProtocolLibHelper protocolLibHelper;
-	
-	public WorldGuardExtraFlagsPlugin()
-	{
-		WorldGuardExtraFlagsPlugin.plugin = this;
-	}
-	
-	@Override
-	public void onLoad()
-	{
-		this.worldEditPlugin = (WorldEditPlugin)this.getServer().getPluginManager().getPlugin("WorldEdit");
-		this.worldGuardPlugin = (WorldGuardPlugin)this.getServer().getPluginManager().getPlugin("WorldGuard");
-		
-		this.worldGuardCommunicator = WorldGuardExtraFlagsPlugin.createWorldGuardCommunicator();
-		if (this.worldGuardCommunicator == null)
-		{
-			throw new RuntimeException("Unsupported WorldGuard version: " + this.worldGuardPlugin.getDescription().getVersion());
-		}
-		
-		WorldGuardUtils.setCommunicator(this.worldGuardCommunicator);
-		
-		try
-		{
-			this.worldGuardCommunicator.onLoad(this);
-		}
-		catch (Exception e)
-		{
-			this.getServer().getPluginManager().disablePlugin(this);
-			
-			throw new RuntimeException("Failed to load WorldGuard communicator", e);
-		}
+    @Getter
+    private WorldGuardPlugin worldGuardPlugin;
+    @Getter
+    private WorldEditPlugin worldEditPlugin;
 
-		//Soft dependencies, due to some compatibility issues or add flags related to a plugin
-		try
-		{
-			Plugin essentialsPlugin = WorldGuardExtraFlagsPlugin.getPlugin().getServer().getPluginManager().getPlugin("Essentials");
-			if (essentialsPlugin != null)
-			{
-				this.essentialsHelper = new EssentialsHelper(this, essentialsPlugin);
-			}
-		}
-		catch(Throwable ignore)
-		{
-			
-		}
+    @Getter
+    private EssentialsHelper essentialsHelper;
+    @Getter
+    private FAWEHelper faweHelper;
+    @Getter
+    private ProtocolLibHelper protocolLibHelper;
 
-		try
-		{
-			Plugin fastAsyncWorldEditPlugin = this.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit");
-			if (fastAsyncWorldEditPlugin != null)
-			{
-				this.faweHelper = new FAWEHelper(this, fastAsyncWorldEditPlugin);
-			}
-		}
-		catch(Throwable ignore)
-		{
-			
-		}
-		
-		try
-		{
-			Plugin protocolLibPlugin = this.getServer().getPluginManager().getPlugin("ProtocolLib");
-			if (protocolLibPlugin != null)
-			{
-				this.protocolLibHelper = new ProtocolLibHelper(this, protocolLibPlugin);
-			}
-		}
-		catch(Throwable ignore)
-		{
-			
-		}
-	}
-	
-	@Override
-	public void onEnable()
-	{
-		if (this.worldGuardCommunicator == null)
-		{
-			this.getServer().getPluginManager().disablePlugin(this);
-			
-			return;
-		}
-		
-		try
-		{
-			this.worldGuardCommunicator.onEnable(this);
-		}
-		catch (Exception e)
-		{
-			this.getServer().getPluginManager().disablePlugin(this);
-			
-			throw new RuntimeException("Failed to enable WorldGuard communicator", e);
-		}
+    public WorldGuardExtraFlagsPlugin() {
+        WorldGuardExtraFlagsPlugin.plugin = this;
+    }
 
-		this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new BlockListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new WorldListener(this), this);
+    @Override
+    public void onLoad() {
+        this.worldEditPlugin = (WorldEditPlugin) this.getServer().getPluginManager().getPlugin("WorldEdit");
+        this.worldGuardPlugin = (WorldGuardPlugin) this.getServer().getPluginManager().getPlugin("WorldGuard");
 
-		if (this.worldGuardCommunicator.isLegacy())
-		{
-			this.getServer().getPluginManager().registerEvents(new BlockListenerWG(this), this);
-		}
-		
-		try
-		{
-			if (EntityToggleGlideEvent.class != null) //LOL, Just making it look nice xD
-			{
-				this.getServer().getPluginManager().registerEvents(new EntityListenerOnePointNine(this), this);
-			}
-		}
-		catch(NoClassDefFoundError ignored)
-		{
-			
-		}
-		
-		try
-		{
-			ParameterizedType type = (ParameterizedType)PortalCreateEvent.class.getDeclaredField("blocks").getGenericType();
-			Class<?> clazz = (Class<?>)type.getActualTypeArguments()[0];
-			if (clazz == BlockState.class)
-			{
-				this.getServer().getPluginManager().registerEvents(new net.goldtreeservers.worldguardextraflags.spigot1_14.EntityListener(this), this);
-			}
-			else
-			{
-				this.getServer().getPluginManager().registerEvents(new EntityListener(this), this);
-			}
-		}
-		catch(Throwable ignored)
-		{
-			this.getServer().getPluginManager().registerEvents(new EntityListener(this), this);
-		}
-		
-		if (this.faweHelper != null)
-		{
-			this.faweHelper.onEnable();
-		}
-		else
-		{
-			this.worldEditPlugin.getWorldEdit().getEventBus().register(new WorldEditListener(this));
-		}
-		
-		if (this.essentialsHelper != null)
-		{
-			this.essentialsHelper.onEnable();
-		}
-		
-		if (this.protocolLibHelper != null)
-		{
-			this.protocolLibHelper.onEnable();
-		}
-		else if (SupportedFeatures.isPotionEffectEventSupported())
-		{
-			this.getServer().getPluginManager().registerEvents(new EntityPotionEffectEventListener(this), this);
-		}
-		
-		for(World world : this.getServer().getWorlds())
-		{
-			this.getWorldGuardCommunicator().doUnloadChunkFlagCheck(world);
-		}
-		
-		this.setupMetrics();
-	}
-	
-	private void setupMetrics()
-	{
-		final int bStatsPluginId = 7301;
-		
+        this.worldGuardCommunicator = WorldGuardExtraFlagsPlugin.createWorldGuardCommunicator();
+        if (this.worldGuardCommunicator == null) {
+            throw new RuntimeException("Unsupported WorldGuard version: " + this.worldGuardPlugin.getDescription().getVersion());
+        }
+
+        WorldGuardUtils.setCommunicator(this.worldGuardCommunicator);
+
+        try {
+            this.worldGuardCommunicator.onLoad(this);
+        } catch (Exception e) {
+            this.getServer().getPluginManager().disablePlugin(this);
+
+            throw new RuntimeException("Failed to load WorldGuard communicator", e);
+        }
+
+        //Soft dependencies, due to some compatibility issues or add flags related to a plugin
+        try {
+            Plugin essentialsPlugin = WorldGuardExtraFlagsPlugin.getPlugin().getServer().getPluginManager().getPlugin("Essentials");
+            if (essentialsPlugin != null) {
+                this.essentialsHelper = new EssentialsHelper(this, essentialsPlugin);
+            }
+        } catch (Throwable ignore) {
+
+        }
+
+        try {
+            Plugin fastAsyncWorldEditPlugin = this.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit");
+            if (fastAsyncWorldEditPlugin != null) {
+                this.faweHelper = new FAWEHelper(this, fastAsyncWorldEditPlugin);
+            }
+        } catch (Throwable ignore) {
+
+        }
+
+        try {
+            Plugin protocolLibPlugin = this.getServer().getPluginManager().getPlugin("ProtocolLib");
+            if (protocolLibPlugin != null) {
+                this.protocolLibHelper = new ProtocolLibHelper(this, protocolLibPlugin);
+            }
+        } catch (Throwable ignore) {
+
+        }
+    }
+
+    @Override
+    public void onEnable() {
+        if (this.worldGuardCommunicator == null) {
+            this.getServer().getPluginManager().disablePlugin(this);
+
+            return;
+        }
+
+        try {
+            this.worldGuardCommunicator.onEnable(this);
+        } catch (Exception e) {
+            this.getServer().getPluginManager().disablePlugin(this);
+
+            throw new RuntimeException("Failed to enable WorldGuard communicator", e);
+        }
+
+        this.getServer().getPluginManager().registerEvents(new FlyFlagListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new BlockListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new WorldListener(this), this);
+
+
+        this.getServer().getPluginManager().registerEvents(new BlockListenerWG(this), this);
+
+        try {
+            if (EntityToggleGlideEvent.class != null) //LOL, Just making it look nice xD
+            {
+                this.getServer().getPluginManager().registerEvents(new EntityListenerOnePointNine(this), this);
+            }
+        } catch (NoClassDefFoundError ignored) {
+        }
+
+        try {
+            ParameterizedType type = (ParameterizedType) PortalCreateEvent.class.getDeclaredField("blocks").getGenericType();
+            Class<?> clazz = (Class<?>) type.getActualTypeArguments()[0];
+            if (clazz == BlockState.class) {
+                this.getServer().getPluginManager().registerEvents(new net.goldtreeservers.worldguardextraflags.spigot1_14.EntityListener(this), this);
+            } else {
+                this.getServer().getPluginManager().registerEvents(new EntityListener(this), this);
+            }
+        } catch (Throwable ignored) {
+            this.getServer().getPluginManager().registerEvents(new EntityListener(this), this);
+        }
+
+        if (this.faweHelper != null) {
+            this.faweHelper.onEnable();
+        } else {
+            this.worldEditPlugin.getWorldEdit().getEventBus().register(new WorldEditListener(this));
+        }
+
+        if (this.essentialsHelper != null) {
+            this.essentialsHelper.onEnable();
+        }
+
+        if (this.protocolLibHelper != null) {
+            this.protocolLibHelper.onEnable();
+        } else if (SupportedFeatures.isPotionEffectEventSupported()) {
+            this.getServer().getPluginManager().registerEvents(new EntityPotionEffectEventListener(this), this);
+        }
+
+        for (World world : this.getServer().getWorlds()) {
+            this.getWorldGuardCommunicator().doUnloadChunkFlagCheck(world);
+        }
+
+        this.setupMetrics();
+    }
+
+    private void setupMetrics() {
+        final int bStatsPluginId = 7301;
+
         Metrics metrics = new Metrics(this, bStatsPluginId);
-        metrics.addCustomChart(new Metrics.AdvancedPie("flags_count", new Callable<Map<String, Integer>>()
-        {
-        	private final Set<Flag<?>> flags = WorldGuardExtraFlagsPlugin.this.getPluginFlags();
-        	
-			@Override
-			public Map<String, Integer> call() throws Exception
-			{
-	            Map<Flag<?>, Integer> valueMap = this.flags.stream().collect(Collectors.toMap((v) -> v, (v) -> 0));
+        metrics.addCustomChart(new Metrics.AdvancedPie("flags_count", new Callable<Map<String, Integer>>() {
+            private final Set<Flag<?>> flags = WorldGuardExtraFlagsPlugin.this.getPluginFlags();
 
-	            WorldGuardExtraFlagsPlugin.this.getWorldGuardCommunicator().getRegionContainer().getLoaded().forEach((m) ->
-	            {
-	            	m.getRegions().values().forEach((r) ->
-	            	{
-	            		r.getFlags().keySet().forEach((f) -> 
-	            		{
-	            			valueMap.computeIfPresent(f, (k, v) -> v + 1);
-	            		});
-	            	});
-	            });
-	            
-				return valueMap.entrySet().stream().collect(Collectors.toMap((v) -> v.getKey().getName(), (v) -> v.getValue()));
-			}
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                Map<Flag<?>, Integer> valueMap = this.flags.stream().collect(Collectors.toMap((v) -> v, (v) -> 0));
+
+                WorldGuardExtraFlagsPlugin.this.getWorldGuardCommunicator().getRegionContainer().getLoaded().forEach((m) ->
+                {
+                    m.getRegions().values().forEach((r) ->
+                    {
+                        r.getFlags().keySet().forEach((f) ->
+                        {
+                            valueMap.computeIfPresent(f, (k, v) -> v + 1);
+                        });
+                    });
+                });
+
+                return valueMap.entrySet().stream().collect(Collectors.toMap((v) -> v.getKey().getName(), (v) -> v.getValue()));
+            }
         }));
-	}
-	
-	private Set<Flag<?>> getPluginFlags()
-	{
-		Set<Flag<?>> flags = new HashSet<>();
-		
-		for (Field field : Flags.class.getFields())
-		{
-			try
-			{
-				flags.add((Flag<?>)field.get(null));
-			}
-			catch (IllegalArgumentException | IllegalAccessException e)
-			{
-			}
-		}
-		
-		return flags;
-	}
-	
-	public static WorldGuardCommunicator createWorldGuardCommunicator()
-	{
-		try
-		{
-			Class.forName("com.sk89q.worldguard.WorldGuard"); //Only exists in WG 7
-			
-			return new WorldGuardSevenCommunicator();
-		}
-		catch (Throwable ignored)
-		{
-			
-		}
-		
-		try
-		{
-			Class<?> clazz = Class.forName("com.sk89q.worldguard.bukkit.WorldGuardPlugin");
-			if (clazz.getMethod("getFlagRegistry") != null)
-			{
-				return new WorldGuardSixCommunicator();
-			}
-		}
-		catch (Throwable ignored)
-		{
-			ignored.printStackTrace();
-		}
-		
-		return null;
-	}
+    }
+
+    private Set<Flag<?>> getPluginFlags() {
+        Set<Flag<?>> flags = new HashSet<>();
+
+        for (Field field : Flags.class.getFields()) {
+            try {
+                flags.add((Flag<?>) field.get(null));
+            } catch (IllegalArgumentException | IllegalAccessException ignored) {
+            }
+        }
+
+        return flags;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static WorldGuardCommunicator createWorldGuardCommunicator() {
+        try {
+            Class.forName("com.sk89q.worldguard.WorldGuard"); //Only exists in WG 7
+
+            return new WorldGuardSevenCommunicator();
+        } catch (Throwable ignored) {
+        }
+
+        try {
+            Class<?> clazz = Class.forName("com.sk89q.worldguard.bukkit.WorldGuardPlugin");
+            if (clazz.getMethod("getFlagRegistry") != null)
+                return new WorldGuardSixCommunicator();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
