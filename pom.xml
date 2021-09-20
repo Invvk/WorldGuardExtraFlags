@@ -8,7 +8,7 @@
    
    <packaging>pom</packaging>
    
-      <build>
+   <build>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -26,7 +26,7 @@
       <dependency>
          <groupId>org.projectlombok</groupId>
          <artifactId>lombok</artifactId>
-         <version>1.16.18</version>
+         <version>1.18.20</version>
          <scope>provided</scope>
       </dependency>
    </dependencies>
@@ -37,6 +37,7 @@
    	<module>WG</module>
    	<module>WG7</module>
    	<module>Spigot</module>
-    <module>Spigot-1_14</module>
+    <module>1_14_R1</module>
    </modules>
+
 </project>
