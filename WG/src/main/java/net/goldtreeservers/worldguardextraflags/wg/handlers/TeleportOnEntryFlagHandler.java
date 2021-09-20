@@ -16,41 +16,33 @@ import net.goldtreeservers.worldguardextraflags.we.WorldEditUtils;
 import net.goldtreeservers.worldguardextraflags.wg.WorldGuardUtils;
 import net.goldtreeservers.worldguardextraflags.wg.wrappers.HandlerWrapper;
 
-public class TeleportOnEntryFlagHandler extends HandlerWrapper
-{
-	public static final Factory FACTORY(Plugin plugin)
-	{
-		return new Factory(plugin);
-	}
-	
-    public static class Factory extends HandlerWrapper.Factory<TeleportOnEntryFlagHandler>
-    {
-        public Factory(Plugin plugin)
-        {
-			super(plugin);
-		}
+public class TeleportOnEntryFlagHandler extends HandlerWrapper {
+    public static final Factory FACTORY(Plugin plugin) {
+        return new Factory(plugin);
+    }
 
-		@Override
-        public TeleportOnEntryFlagHandler create(Session session)
-        {
+    public static class Factory extends HandlerWrapper.Factory<TeleportOnEntryFlagHandler> {
+        public Factory(Plugin plugin) {
+            super(plugin);
+        }
+
+        @Override
+        public TeleportOnEntryFlagHandler create(Session session) {
             return new TeleportOnEntryFlagHandler(this.getPlugin(), session);
         }
     }
-	    
-	protected TeleportOnEntryFlagHandler(Plugin plugin, Session session)
-	{
-		super(plugin, session);
-	}
-	
-	@Override
-	public boolean onCrossBoundary(Player player, Location from, Location to, ApplicableRegionSet toSet, Set<ProtectedRegion> entered, Set<ProtectedRegion> exited, MoveType moveType)
-	{
-		Object location = WorldGuardUtils.queryValueUnchecked(player, to.getWorld(), entered, Flags.TELEPORT_ON_ENTRY);
-		if (location != null && WorldGuardUtils.hasNoTeleportLoop(this.getPlugin(), player, location))
-		{
-			player.teleport(WorldEditUtils.toLocation(location));
-		}
-		
-		return true;
-	}
+
+    protected TeleportOnEntryFlagHandler(Plugin plugin, Session session) {
+        super(plugin, session);
+    }
+
+    @Override
+    public boolean onCrossBoundary(Player player, Location from, Location to, ApplicableRegionSet toSet, Set<ProtectedRegion> entered, Set<ProtectedRegion> exited, MoveType moveType) {
+        Object location = WorldGuardUtils.queryValueUnchecked(player, to.getWorld(), entered, Flags.TELEPORT_ON_ENTRY);
+        if (location != null && WorldGuardUtils.hasNoTeleportLoop(this.getPlugin(), player, location)) {
+            player.teleport(WorldEditUtils.toLocation(location));
+        }
+
+        return true;
+    }
 }
