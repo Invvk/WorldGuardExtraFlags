@@ -14,21 +14,18 @@ import net.goldtreeservers.worldguardextraflags.AbstractWorldGuardExtraFlagsPlug
 import net.goldtreeservers.worldguardextraflags.flags.Flags;
 
 @RequiredArgsConstructor
-public class EntityListener implements Listener
-{
-	@Getter private final AbstractWorldGuardExtraFlagsPlugin plugin;
-	
-	@EventHandler(ignoreCancelled = true)
-	public void onPortalCreateEvent(PortalCreateEvent event)
-	{
-		for(BlockState block : event.getBlocks())
-		{
-			ApplicableRegionSet regions = this.plugin.getWorldGuardCommunicator().getRegionContainer().createQuery().getApplicableRegions(block.getLocation());
-			if (regions.queryValue(null, Flags.NETHER_PORTALS) == State.DENY)
-			{
-				event.setCancelled(true);
-				break;
-			}
-		}
-	}
+public class EntityListener implements Listener {
+    @Getter
+    private final AbstractWorldGuardExtraFlagsPlugin plugin;
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPortalCreateEvent(PortalCreateEvent event) {
+        for (BlockState block : event.getBlocks()) {
+            ApplicableRegionSet regions = this.plugin.getWorldGuardCommunicator().getRegionContainer().createQuery().getApplicableRegions(block.getLocation());
+            if (regions.queryValue(null, Flags.NETHER_PORTALS) == State.DENY) {
+                event.setCancelled(true);
+                break;
+            }
+        }
+    }
 }
