@@ -37,7 +37,6 @@ public class CommandOnExitFlagHandler extends HandlerWrapper {
 
     protected CommandOnExitFlagHandler(Plugin plugin, Session session) {
         super(plugin, session);
-
         this.lastCommands = new ArrayList<>();
     }
 
@@ -60,15 +59,16 @@ public class CommandOnExitFlagHandler extends HandlerWrapper {
         }
 
         for (Set<String> commands_ : this.lastCommands) {
-            if (!commands.contains(commands_) && commands_.size() > 0) {
+            if (!commands.contains(commands_)) {
                 for (String command : commands_) {
-                    this.getPlugin().getServer().dispatchCommand(player, command.substring(1).replace("%username%", player.getName())); //TODO: Make this better
+                    this.getPlugin().getServer().dispatchCommand(player,
+                            command.substring(1).replace("%username%", player.getName())); //TODO: Make this better
                 }
+                break;
             }
         }
 
         this.lastCommands = commands;
-
         return true;
     }
 }
