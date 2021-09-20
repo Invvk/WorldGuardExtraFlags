@@ -26,37 +26,29 @@ import net.goldtreeservers.worldguardextraflags.utils.SupportedFeatures;
 import net.goldtreeservers.worldguardextraflags.wg.WorldGuardUtils;
 
 @RequiredArgsConstructor
-public class BlockListener implements Listener
-{
-	@Getter private final WorldGuardExtraFlagsPlugin plugin;
-	
-	@EventHandler(ignoreCancelled = true)
-	public void onEntityBlockFormEvent(EntityBlockFormEvent event)
-	{
-		if (SupportedFeatures.isFrostwalkerSupported())
-		{
-			BlockState newState = event.getNewState();
-			if (newState.getType() == Material.FROSTED_ICE)
-			{
-				ApplicableRegionSet regions = this.plugin.getWorldGuardCommunicator().getRegionContainer().createQuery().getApplicableRegions(newState.getLocation());
-				
-				Entity entity = event.getEntity();
-				if (entity instanceof Player)
-				{
-					Player player = (Player)entity;
-					if (WorldGuardUtils.queryValue(player, player.getWorld(), regions.getRegions(), Flags.FROSTWALKER) == State.DENY)
-					{
-						event.setCancelled(true);
-					}
-				}
-				else
-				{
-					if (regions.queryValue(null, Flags.FROSTWALKER) == State.DENY)
-					{
-						event.setCancelled(true);
-					}
-				}
-			}
-		}
-	}
+public class BlockListener implements Listener {
+    @Getter
+    private final WorldGuardExtraFlagsPlugin plugin;
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityBlockFormEvent(EntityBlockFormEvent event) {
+        if (SupportedFeatures.isFrostwalkerSupported()) {
+            BlockState newState = event.getNewState();
+            if (newState.getType() == Material.FROSTED_ICE) {
+                ApplicableRegionSet regions = this.plugin.getWorldGuardCommunicator().getRegionContainer().createQuery().getApplicableRegions(newState.getLocation());
+
+                Entity entity = event.getEntity();
+                if (entity instanceof Player) {
+                    Player player = (Player) entity;
+                    if (WorldGuardUtils.queryValue(player, player.getWorld(), regions.getRegions(), Flags.FROSTWALKER) == State.DENY) {
+                        event.setCancelled(true);
+                    }
+                } else {
+                    if (regions.queryValue(null, Flags.FROSTWALKER) == State.DENY) {
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+    }
 }
