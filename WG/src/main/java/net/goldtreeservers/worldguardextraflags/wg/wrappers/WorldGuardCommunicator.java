@@ -60,11 +60,10 @@ public interface WorldGuardCommunicator
 		flagRegistry.register(Flags.JOIN_LOCATION);
 
 
-			flagRegistry.register(Flags.ALLOW_BLOCK_PLACE);
-			flagRegistry.register(Flags.DENY_BLOCK_PLACE);
-			flagRegistry.register(Flags.ALLOW_BLOCK_BREAK);
-			flagRegistry.register(Flags.DENY_BLOCK_BREAK);
-
+		flagRegistry.register(Flags.ALLOW_BLOCK_PLACE);
+		flagRegistry.register(Flags.DENY_BLOCK_PLACE);
+		flagRegistry.register(Flags.ALLOW_BLOCK_BREAK);
+		flagRegistry.register(Flags.DENY_BLOCK_BREAK);
 	}
 	
 	default public void onEnable(Plugin plugin) throws Exception
