@@ -4,4 +4,6 @@ also, this fork attempts to fix some of the issues regarding flying/gliding.
 
 This project is currently in beta, please do not use it in production as it wasn't tested enough
 
+**Note: I'm going to only support 1.17.1 and higher.**
+
 Original plugin page: https://www.spigotmc.org/resources/worldguard-extra-flags.4823/
