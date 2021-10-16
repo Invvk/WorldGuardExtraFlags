@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'io.github.invvk'
-version '1.0.0'
+version "$parent.version"
 
 repositories {
     mavenCentral()
