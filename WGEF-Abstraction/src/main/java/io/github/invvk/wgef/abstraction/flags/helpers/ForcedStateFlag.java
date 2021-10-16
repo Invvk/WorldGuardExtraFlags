@@ -1,0 +1,91 @@
+package io.github.invvk.wgef.abstraction.flags.helpers;
+
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.FlagContext;
+import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
+
+import java.util.Collection;
+
+public class ForcedStateFlag extends Flag<ForcedStateFlag.ForcedState> {
+    public enum ForcedState {
+        ALLOW,
+        DENY,
+        FORCE
+    }
+
+    public ForcedStateFlag(String name) {
+        super(name);
+    }
+
+    @Override
+    public ForcedState getDefault() {
+        return ForcedState.ALLOW;
+    }
+
+    @Override
+    public boolean hasConflictStrategy() {
+        return true;
+    }
+
+    @Override
+    public ForcedState chooseValue(Collection<ForcedState> values) {
+        //Order is the following: Deny > Force > Allow
+        ForcedState result = null;
+
+        if (!values.isEmpty()) {
+            for (ForcedState state : values) {
+                if (state == ForcedState.DENY) {
+                    return ForcedState.DENY;
+                } else if (state == ForcedState.FORCE) {
+                    result = ForcedState.FORCE;
+                } else if (state == ForcedState.ALLOW) {
+                    if (result == null) {
+                        result = ForcedState.ALLOW;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+    @Override
+    public ForcedState parseInput(FlagContext context) throws InvalidFlagFormat {
+        String input = context.getUserInput();
+
+        if (input.equalsIgnoreCase("allow")) {
+            return ForcedState.ALLOW;
+        } else if (input.equalsIgnoreCase("force")) {
+            return ForcedState.FORCE;
+        } else if (input.equalsIgnoreCase("deny")) {
+            return ForcedState.DENY;
+        } else if (input.equalsIgnoreCase("none")) {
+            return null;
+        } else {
+            throw new InvalidFlagFormat("Expected none/allow/force/deny but got '" + input + "'");
+        }
+    }
+
+    @Override
+    public ForcedState unmarshal(Object o) {
+		assert o != null;
+		String str = o.toString();
+		// Java 16
+		return switch (str) {
+			case "ALLOW" -> ForcedState.ALLOW;
+			case "FORCE" -> ForcedState.FORCE;
+			case "DENY" -> ForcedState.DENY;
+			default -> null;
+		};
+    }
+
+    @Override
+    public Object marshal(ForcedState o) {
+        if (o == null) {
+            return null;
+        }
+
+        return o.toString();
+    }
+}

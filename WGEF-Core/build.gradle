@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'kr.entree.spigradle' version '2.2.4'
+}
+
+group 'io.github.invvk'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'net.essentialsx:EssentialsX:2.19.0'
+
+    implementation project(":WGEF-Abstraction")
+    implementation project(":WG7")
+}
+
+shadowJar {
+    archiveBaseName.set('WGEF-REBORN')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+
+    destinationDirectory = file(base117)
+
+    exclude 'META-INF/**'
+    exclude 'LICENSE'
+
+    finalizedBy('clean', ':WG7:clean', ':WGEF-Abstraction:clean')
+}
+
+spigot {
+    name 'WGEF-Reborn'
+    authors 'Invvk', 'isokissa3'
+    apiVersion '1.17'
+    depends 'WorldGuard'
+    softDepends 'FastAsyncWorldEdit', 'Essentials'
+    description 'Adds more flags to WorldGuard to help manage your server easily!'
+}
