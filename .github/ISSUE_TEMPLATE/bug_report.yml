@@ -8,7 +8,7 @@ body:
       value: |
         Thanks for taking the time to fill out this bug report for WGEF-REBORN! Fill out the following form to your best ability to help us fix the problem.
         Only use this if you're absolutely sure that you found a bug and can reproduce it. For anything else, use: [our Discord server](https://discord.gg/xcFJvXYsnD).
-        Do NOT use the public issue tracker to report security vulnerabilities! Please contact me privatly in discord Invvk#0347
+        Do NOT use the public issue tracker to report security vulnerabilities! Please contact me privatly in discord `Invvk#0347`
 
   - type: dropdown
     attributes:
