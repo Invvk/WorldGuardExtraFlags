@@ -82,7 +82,7 @@ body:
       label: Checklist
       description: Make sure you have followed each of the steps outlined here.
       options:
-        - label: I'm using java 16 and running my server in 1.17.1
+        - label: I'm using java 16+ and running my server in 1.17.1+
           required: true
         - label: I am using the newest build from https://github.com/Invvk/WorldGuardExtraFlagsPlugin/releases and the issue still persists.
           required: true

@@ -51,4 +51,6 @@ public final class WGEFlags {
 
     public final static StateFlag ITEM_DURABILITY = new StateFlag("item-durability", true);
 
+    public final static StateFlag VILLAGER_TRADE = new StateFlag("villager-trade", true);
+
 }
