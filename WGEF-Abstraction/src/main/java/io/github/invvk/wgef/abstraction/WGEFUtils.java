@@ -2,6 +2,7 @@ package io.github.invvk.wgef.abstraction;
 
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.FlagValueCalculator;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
@@ -38,6 +39,14 @@ public class WGEFUtils {
         if (player.hasMetadata("NPC"))
             return true;
         return player.hasPermission("worldguard.region.bypass." + world.getName() + "." + region.getId() + "." + flag.getName());
+    }
+
+    public static boolean isPartOfRegion(Player bukkitPlayer, ApplicableRegionSet set) {
+        final LocalPlayer player = wrapPlayer(bukkitPlayer);
+        for (ProtectedRegion region: set)
+            if (region.isMember(player) || region.isOwner(player))
+                return true;
+        return false;
     }
 
     public static StateFlag.State queryState(Player player, World world, Set<ProtectedRegion> regions, StateFlag flag) {
