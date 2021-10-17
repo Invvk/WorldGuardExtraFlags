@@ -4,6 +4,8 @@ First of all, thank you for considering contributing to WGEF! feel welcome and r
 Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
 
 # Ground Rules
+First of all, make sure that you follow [Code of Conduct](CODE_OF_CONDUCT.md)
+
 - treat others with respect, Everyone can make a valuable contribution to WGEF. We may not always agree, but disagreement is no excuse for poor behavior and poor manners.
 - Be welcoming to newcomers and encourage diverse new contributors from all backgrounds.
 - Make sure that you test your code before making a PR.
