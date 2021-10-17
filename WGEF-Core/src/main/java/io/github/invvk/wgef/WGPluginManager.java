@@ -70,6 +70,7 @@ public class WGPluginManager implements IManager {
         registry.register(WGEFlags.FLY_SPEED);
         registry.register(WGEFlags.NETHER_PORTALS);
         registry.register(WGEFlags.ITEM_DURABILITY);
+        registry.register(WGEFlags.VILLAGER_TRADE);
 
         this.dependency();
     }
@@ -111,7 +112,8 @@ public class WGPluginManager implements IManager {
                 new DeathListener(this.plugin),
                 new NetherPortalListener(this.plugin),
                 new ItemListener(this.plugin),
-                new SpeedListener(this.plugin));
+                new SpeedListener(this.plugin),
+                new VillagerTradeListener(this.plugin));
     }
 
     @Override

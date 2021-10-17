@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: WGEF Wiki
+    url: https://github.com/Invvk/WorldGuardExtraFlags/wiki
+    about: WGEF Wiki page, please view it before asking for help
   - name: VVKs Discord
     url: https://discord.gg/xcFJvXYsnD
     about: Our support Discord, please ask questions and seek support here.
