@@ -35,14 +35,59 @@ public class BlockListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
     public void onBlockPlaceEvent(PlaceBlockEvent event) {
-        handleBlockEvent(event, event.getCause().getRootCause(), event.getEffectiveMaterial(), event.getBlocks());
+        Event.Result originalResult = event.getResult();
+        Object cause = event.getCause().getRootCause();
+        if (cause instanceof Player player) {
+            for (Block block : event.getBlocks()) {
+                Material type = block.getType();
+                if (type == Material.AIR)
+                    type = event.getEffectiveMaterial();
+
+                ApplicableRegionSet regions = this.plugin.getFork().getRegionContainer().createQuery().getApplicableRegions(block.getLocation());
+
+                Set<Material> state = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.ALLOW_BLOCK_PLACE);
+                if (state != null && state.contains(type)) {
+                    event.setResult(Event.Result.ALLOW);
+                } else {
+                    Set<Material> state2 = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.DENY_BLOCK_PLACE);
+                    if (state2 != null && state2.contains(type)) {
+                        event.setResult(Event.Result.DENY);
+                        return;
+                    } else {
+                        event.setResult(originalResult);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
     public void onBlockBreakEvent(BreakBlockEvent event) {
-        handleBlockEvent(event, event.getCause().getRootCause(), event.getEffectiveMaterial(), event.getBlocks());
+        Event.Result originalResult = event.getResult();
+        Object cause = event.getCause().getRootCause();
+
+        if (cause instanceof Player player) {
+
+            for (Block block : event.getBlocks()) {
+                ApplicableRegionSet regions = this.plugin.getFork().getRegionContainer().createQuery().getApplicableRegions(block.getLocation());
+
+                Set<Material> state = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.ALLOW_BLOCK_BREAK);
+                if (state != null && state.contains(block.getType())) {
+                    event.setResult(Event.Result.ALLOW);
+                } else {
+                    Set<Material> state2 = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.DENY_BLOCK_BREAK);
+                    if (state2 != null && state2.contains(block.getType())) {
+                        event.setResult(Event.Result.DENY);
+                    } else {
+                        event.setResult(originalResult);
+                    }
+                    return;
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -62,37 +107,13 @@ public class BlockListener implements Listener {
         RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
         DelayedRegionOverlapAssociation association = new DelayedRegionOverlapAssociation(query, BukkitAdapter.adapt(origin));
 
-        for (BlockState block: blocks) {
+        for (BlockState block : blocks) {
             if (block == null)
                 continue;
 
             if (!query.testBuild(BukkitAdapter.adapt(block.getLocation()),
                     association, Flags.BUILD, Flags.BLOCK_PLACE))
                 block.setType(block.getWorld().getBlockAt(block.getLocation()).getType());
-        }
-    }
-
-    // Special thanks to @OnyxianSoul
-    private void handleBlockEvent(Handleable event, Object cause, Material effectiveMaterial, List<Block> affectedBlocks) {
-        if (cause instanceof Player player) {
-            for (Block block : affectedBlocks) {
-                Material type = block.getType();
-                if (type == Material.AIR)
-                    type = effectiveMaterial;  //Workaround for https://github.com/aromaa/WorldGuardExtraFlagsPlugin/issues/12
-
-                ApplicableRegionSet regions = plugin.getFork().getRegionContainer().createQuery().getApplicableRegions(block.getLocation());
-
-                Set<Material> allowBlockPlaceMaterials = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.ALLOW_BLOCK_PLACE);
-                if (allowBlockPlaceMaterials != null && !allowBlockPlaceMaterials.contains(type)) { //If there is a list of allowed materials, and it doesn't contain this block, deny the placement
-                    event.setResult(Event.Result.DENY);
-                }
-
-                Set<Material> denyBlockPlaceMaterials = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.DENY_BLOCK_PLACE); //If there is a list of denied materials, and it includes this block, deny the placement
-                if (denyBlockPlaceMaterials != null && denyBlockPlaceMaterials.contains(type)) {
-                    event.setResult(Event.Result.DENY);
-                    return;
-                }
-            }
         }
     }
 
