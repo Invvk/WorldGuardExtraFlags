@@ -1,6 +1,7 @@
 package io.github.invvk.wgef;
 
 import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import io.github.invvk.wgef.abstraction.IManager;
 import io.github.invvk.wgef.abstraction.IWGFork;
@@ -22,10 +23,15 @@ import io.github.invvk.wgef.listeners.*;
 import io.github.invvk.wgef.listeners.essentials.GodModeListener;
 import io.github.invvk.wgef.listeners.we.WorldEditListener;
 import io.github.invvk.wgef.v7.IWG7Fork;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.AdvancedPie;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class WGPluginManager implements IManager {
 
@@ -114,6 +120,23 @@ public class WGPluginManager implements IManager {
                 new ItemListener(this.plugin),
                 new SpeedListener(this.plugin),
                 new VillagerTradeListener(this.plugin));
+
+        Metrics metrics = new Metrics(this.plugin, 13119);
+
+        metrics.addCustomChart(new AdvancedPie("flag_usage", () -> {
+            final Set<Flag<?>> flags = WGEFlags.values();
+            Map<Flag<?>, Integer> valueMap = flags.stream().collect(Collectors.toMap((value) -> value, (v) -> 0));
+            WGEFUtils.getFork().getRegionContainer().getLoaded()
+                    .forEach(regionManager -> {
+                        regionManager.getRegions().values().forEach(region -> {
+                            region.getFlags().keySet().forEach(flag -> {
+                                valueMap.computeIfPresent(flag, (key,value) -> value + 1);
+                            });
+                        });
+                    });
+            return valueMap.entrySet().stream().collect(Collectors.toMap((v) -> v.getKey().getName(), Map.Entry::getValue));
+        }));
+
     }
 
     @Override

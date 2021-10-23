@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
     id 'kr.entree.spigradle' version '2.2.4'
 }
 
@@ -14,6 +14,7 @@ repositories {
 dependencies {
     compileOnly 'net.essentialsx:EssentialsX:2.19.0'
 
+    implementation "org.bstats:bstats-bukkit:2.2.1"
     implementation project(":WGEF-Abstraction")
     implementation project(":WG7")
 }
@@ -27,6 +28,8 @@ shadowJar {
 
     exclude 'META-INF/**'
     exclude 'LICENSE'
+
+    relocate 'org.bstats', 'io.github.invvk.wgef.metrics'
 
     finalizedBy('clean', ':WG7:clean', ':WGEF-Abstraction:clean')
 }

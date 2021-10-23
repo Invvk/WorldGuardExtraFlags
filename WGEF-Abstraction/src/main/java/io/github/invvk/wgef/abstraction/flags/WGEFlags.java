@@ -9,7 +9,13 @@ import org.bukkit.Material;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public final class WGEFlags {
+
     public final static LocationFlag TELEPORT_ON_ENTRY = new LocationFlag("teleport-on-entry");
     public final static LocationFlag TELEPORT_ON_EXIT = new LocationFlag("teleport-on-exit");
 
@@ -52,5 +58,18 @@ public final class WGEFlags {
     public final static StateFlag ITEM_DURABILITY = new StateFlag("item-durability", true);
 
     public final static StateFlag VILLAGER_TRADE = new StateFlag("villager-trade", true);
+
+    public static Set<Flag<?>> values() {
+        return Arrays.stream(WGEFlags.class.getFields())
+                .map(field -> {
+                    try {
+                        return (Flag<?>) field.get(null);
+                    } catch (IllegalAccessException ignored) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
 
 }
