@@ -13,6 +13,7 @@ import io.github.invvk.wgef.abstraction.flags.handler.command.CommandOnEntryHand
 import io.github.invvk.wgef.abstraction.flags.handler.command.CommandOnExitHandler;
 import io.github.invvk.wgef.abstraction.flags.handler.command.ConsoleCommandOnEntryHandler;
 import io.github.invvk.wgef.abstraction.flags.handler.command.ConsoleCommandOnExitHandler;
+import io.github.invvk.wgef.abstraction.flags.handler.essentials.GodModeHandler;
 import io.github.invvk.wgef.abstraction.flags.handler.player.*;
 import io.github.invvk.wgef.abstraction.flags.handler.teleport.TeleportEntryHandler;
 import io.github.invvk.wgef.abstraction.flags.handler.teleport.TeleportExitHandler;
@@ -104,10 +105,12 @@ public class WGPluginManager implements IManager {
         sessionManager.registerHandler(WalkSpeedFlagHandler.FACTORY);
         sessionManager.registerHandler(FlySpeedFlagHandler.FACTORY);
 
-        WorldEdit.getInstance().getEventBus().register(new WorldEditListener());
+        this.getEssentials().ifPresent(e -> {
+            registerEvents(new GodModeListener());
+            sessionManager.registerHandler(GodModeHandler.FACTORY(this));
+        });
 
-        this.getEssentials().ifPresent(e ->
-                registerEvents(new GodModeListener()));
+        WorldEdit.getInstance().getEventBus().register(new WorldEditListener());
 
         this.registerEvents(new BlockedPotionEffectListener(this.plugin),
                 new BlockListener(this.plugin),
@@ -130,7 +133,7 @@ public class WGPluginManager implements IManager {
                     .forEach(regionManager -> {
                         regionManager.getRegions().values().forEach(region -> {
                             region.getFlags().keySet().forEach(flag -> {
-                                valueMap.computeIfPresent(flag, (key,value) -> value + 1);
+                                valueMap.computeIfPresent(flag, (key, value) -> value + 1);
                             });
                         });
                     });
@@ -174,7 +177,7 @@ public class WGPluginManager implements IManager {
     }
 
     private void registerEvents(Listener... listeners) {
-        for (Listener listener: listeners)
+        for (Listener listener : listeners)
             Bukkit.getPluginManager().registerEvents(listener, this.plugin);
     }
 

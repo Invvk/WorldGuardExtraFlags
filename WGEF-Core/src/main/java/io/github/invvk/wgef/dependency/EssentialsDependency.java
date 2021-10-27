@@ -31,8 +31,6 @@ public class EssentialsDependency implements IEssentialsDependency {
 
         // Register flag
         WGEFUtils.getFork().getFlagReg().register(WGEFlags.GOD_MODE);
-
-        WGEFUtils.getFork().getSessionManager().registerHandler(GodModeHandler.FACTORY(iManager));;
     }
 
     @Override
