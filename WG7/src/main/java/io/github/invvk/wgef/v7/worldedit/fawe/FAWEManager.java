@@ -83,7 +83,7 @@ public class FAWEManager extends FaweMaskManager {
     }
 
     @Override
-    public FaweMask getMask(Player wePlayer, MaskType type) {
+    public FaweMask getMask(Player wePlayer, MaskType type, boolean isWhiteListed) {
         final ProtectedRegion region = this.getRegion(WorldGuardPlugin.inst().wrapPlayer(BukkitAdapter.adapt(wePlayer)),
                 BukkitAdapter.adapt(wePlayer.getLocation()));
         return new FaweMask(adapt(region)) {
