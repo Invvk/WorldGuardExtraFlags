@@ -86,4 +86,13 @@ public class WGEFUtils {
         return state == StateFlag.State.DENY;
     }
 
+    public static boolean isFAWEPresent() {
+        try {
+            Class.forName("com.fastasyncworldedit.core.regions.FaweMaskManager");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
 }

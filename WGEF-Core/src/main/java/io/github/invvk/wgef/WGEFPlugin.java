@@ -13,6 +13,7 @@ public class WGEFPlugin extends IWGEFPlugin {
 
     @Override
     public void onLoad() {
+        saveResource("config.yml", false);
         this.manager = new WGPluginManager(this);
         this.manager.load();
         super.onLoad();

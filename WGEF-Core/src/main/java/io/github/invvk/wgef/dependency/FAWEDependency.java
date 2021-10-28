@@ -3,12 +3,11 @@ package io.github.invvk.wgef.dependency;
 import com.fastasyncworldedit.core.FaweAPI;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import io.github.invvk.wgef.abstraction.dependencies.IFAWEDependency;
-import io.github.invvk.wgef.v7.worldedit.fawe.FAWEManager;
 import io.github.invvk.wgef.v7.worldedit.WGEFExtentHandler;
+import io.github.invvk.wgef.v7.worldedit.fawe.FAWEManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -16,10 +15,7 @@ public class FAWEDependency implements IFAWEDependency {
 
     private final boolean enabled;
 
-    @Nullable
     public static FAWEDependency load(Plugin plugin) {
-        if (Bukkit.getPluginManager().getPlugin("FastAsyncWorldEdit") == null)
-            return null;
         return new FAWEDependency(plugin);
     }
 
@@ -38,7 +34,12 @@ public class FAWEDependency implements IFAWEDependency {
 
     @Override
     public boolean isDependencyPresent() {
-        return Bukkit.getPluginManager().getPlugin("FastAsyncWorldEdit") != null;
+        try {
+            Class.forName("com.fastasyncworldedit.core.regions.FaweMaskManager");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     public void injectOption() {

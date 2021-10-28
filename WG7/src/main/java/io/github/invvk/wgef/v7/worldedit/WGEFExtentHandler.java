@@ -39,7 +39,7 @@ public class WGEFExtentHandler extends AbstractDelegateExtent {
         ApplicableRegionSet regions = WGEFUtils.getFork().getRegionContainer().get(this.weWorld)
                 .getApplicableRegions(location);
         StateFlag.State state = WGEFUtils.queryState(this.player, this.world, regions.getRegions(), WGEFlags.WORLD_EDIT);
-        if (state != StateFlag.State.DENY)
+        if (WGEFUtils.isDeny(state))
             return super.setBlock(location, block);
         return false;
     }

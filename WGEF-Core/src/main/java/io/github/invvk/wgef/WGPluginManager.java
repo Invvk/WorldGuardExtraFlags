@@ -23,6 +23,7 @@ import io.github.invvk.wgef.dependency.FAWEDependency;
 import io.github.invvk.wgef.listeners.*;
 import io.github.invvk.wgef.listeners.essentials.GodModeListener;
 import io.github.invvk.wgef.listeners.we.WorldEditListener;
+import io.github.invvk.wgef.updater.UpdateChecker;
 import io.github.invvk.wgef.v7.IWG7Fork;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
@@ -85,7 +86,9 @@ public class WGPluginManager implements IManager {
     @Override
     public void dependency() {
         this.essentials = EssentialsDependency.load(this);
-        this.fawe = FAWEDependency.load(this.plugin);
+
+        if (WGEFUtils.isFAWEPresent())
+            this.fawe = FAWEDependency.load(this.plugin);
     }
 
     @Override
@@ -124,22 +127,8 @@ public class WGPluginManager implements IManager {
                 new SpeedListener(this.plugin),
                 new VillagerTradeListener(this.plugin));
 
-        Metrics metrics = new Metrics(this.plugin, 13119);
-
-        metrics.addCustomChart(new AdvancedPie("flag_usage", () -> {
-            final Set<Flag<?>> flags = WGEFlags.values();
-            Map<Flag<?>, Integer> valueMap = flags.stream().collect(Collectors.toMap((value) -> value, (v) -> 0));
-            WGEFUtils.getFork().getRegionContainer().getLoaded()
-                    .forEach(regionManager -> {
-                        regionManager.getRegions().values().forEach(region -> {
-                            region.getFlags().keySet().forEach(flag -> {
-                                valueMap.computeIfPresent(flag, (key, value) -> value + 1);
-                            });
-                        });
-                    });
-            return valueMap.entrySet().stream().collect(Collectors.toMap((v) -> v.getKey().getName(), Map.Entry::getValue));
-        }));
-
+        this.updateChecker();
+        this.metrics();
     }
 
     @Override
@@ -179,6 +168,39 @@ public class WGPluginManager implements IManager {
     private void registerEvents(Listener... listeners) {
         for (Listener listener : listeners)
             Bukkit.getPluginManager().registerEvents(listener, this.plugin);
+    }
+
+    private void updateChecker() {
+        if (!plugin.getConfig().getBoolean("update-checker"))
+            return;
+
+        new UpdateChecker(this.plugin, 96894)
+                .getVersion(version -> {
+                    if (plugin.getDescription().getVersion().equals(version)) {
+                        plugin.getLogger().info("You are running the latest build!");
+                        return;
+                    }
+                    plugin.getLogger().info("New update found: " + version);
+                    plugin.getLogger().info("download it at: https://www.spigotmc.org/resources/96894/");
+                });
+    }
+
+    private void metrics() {
+        Metrics metrics = new Metrics(this.plugin, 13119);
+
+        metrics.addCustomChart(new AdvancedPie("flag_usage", () -> {
+            final Set<Flag<?>> flags = WGEFlags.values();
+            Map<Flag<?>, Integer> valueMap = flags.stream().collect(Collectors.toMap((value) -> value, (v) -> 0));
+            WGEFUtils.getFork().getRegionContainer().getLoaded()
+                    .forEach(regionManager -> {
+                        regionManager.getRegions().values().forEach(region -> {
+                            region.getFlags().keySet().forEach(flag -> {
+                                valueMap.computeIfPresent(flag, (key, value) -> value + 1);
+                            });
+                        });
+                    });
+            return valueMap.entrySet().stream().collect(Collectors.toMap((v) -> v.getKey().getName(), Map.Entry::getValue));
+        }));
     }
 
 }
