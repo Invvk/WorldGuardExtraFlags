@@ -32,8 +32,20 @@ public class CommandOnEntryHandler extends AbstractFlagHandler<Set<String>> {
     }
 
     @Override
+    protected void onInitialValue(LocalPlayer player, ApplicableRegionSet set, Set<String> value) {
+        this.handleCommands(WGEFUtils.wrapPlayer(player), set);
+    }
+
+    @Override
     protected boolean onSetValue(LocalPlayer localPlayer, Location from, Location to, ApplicableRegionSet toSet, Set<String> currentValue, Set<String> lastValue, MoveType moveType) {
-        Player player = WGEFUtils.wrapPlayer(localPlayer);
+        this.handleCommands(WGEFUtils.wrapPlayer(localPlayer), toSet);
+        return true;
+    }
+
+    @Override
+    protected boolean onAbsentValue(LocalPlayer player, Location from, Location to, ApplicableRegionSet toSet, Set<ProtectedRegion> exited, Set<String> lastValue, MoveType moveType) {return true;}
+
+    private void handleCommands(Player player, ApplicableRegionSet toSet) {
         Set<String> execute = new HashSet<>();
         for (ProtectedRegion region: toSet) {
             if (WGEFUtils.hasBypass(player, player.getWorld(), region, WGEFlags.COMMAND_ON_ENTRY))
@@ -43,11 +55,7 @@ public class CommandOnEntryHandler extends AbstractFlagHandler<Set<String>> {
                 execute.addAll(commands);
         }
         execute.forEach(e -> player.performCommand(e.substring(1).replace("%username%", player.getName())));
-        return true;
+
     }
 
-    @Override
-    protected boolean onAbsentValue(LocalPlayer player, Location from, Location to, ApplicableRegionSet toSet, Set<ProtectedRegion> exited, Set<String> lastValue, MoveType moveType) {return true;}
-    @Override
-    protected void onInitialValue(LocalPlayer player, ApplicableRegionSet set, Set<String> value) {}
 }
