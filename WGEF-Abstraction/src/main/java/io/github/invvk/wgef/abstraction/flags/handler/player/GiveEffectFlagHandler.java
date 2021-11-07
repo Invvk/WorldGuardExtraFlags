@@ -64,10 +64,12 @@ public class GiveEffectFlagHandler extends FlagValueChangeHandler<Set<PotionEffe
     protected boolean onAbsentValue(LocalPlayer localPlayer, Location from, Location to, ApplicableRegionSet toSet, Set<PotionEffect> lastValue, MoveType moveType) {
         final Player player = WGEFUtils.wrapPlayer(localPlayer);
         if (!player.getActivePotionEffects().isEmpty()) {
-            this.give_potions.forEach(e -> {
-                if (player.hasPotionEffect(e.getType()))
-                    player.removePotionEffect(e.getType());
-            });
+            if (this.give_potions != null && !this.give_potions.isEmpty()) {
+                this.give_potions.forEach(e -> {
+                    if (player.hasPotionEffect(e.getType()))
+                        player.removePotionEffect(e.getType());
+                });
+            }
         }
         this.give_potions = WGEFUtils.queryValueUnchecked(player, player.getWorld(), toSet.getRegions(), WGEFlags.GIVE_EFFECTS);
         this.handleValue(player, this.give_potions);

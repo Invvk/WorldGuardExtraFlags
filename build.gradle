@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'io.github.invvk'
-version '2.1.8'
+version '2.1.9'
 
 repositories {
     mavenCentral()
