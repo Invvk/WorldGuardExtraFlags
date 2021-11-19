@@ -4,6 +4,8 @@ import io.github.invvk.wgef.abstraction.IWGEFPlugin;
 import io.github.invvk.wgef.abstraction.IWGFork;
 import kr.entree.spigradle.annotations.SpigotPlugin;
 
+import java.io.File;
+
 @SpigotPlugin
 public class WGEFPlugin extends IWGEFPlugin {
 
@@ -13,7 +15,9 @@ public class WGEFPlugin extends IWGEFPlugin {
 
     @Override
     public void onLoad() {
-        saveResource("config.yml", false);
+        final File file = new File(this.getDataFolder(), "config.yml");
+        if (!file.exists())
+            saveResource("config.yml", false);
         this.manager = new WGPluginManager(this);
         this.manager.load();
         super.onLoad();

@@ -3,9 +3,11 @@ package io.github.invvk.wgef.abstraction.flags;
 import com.sk89q.worldguard.protection.flags.*;
 import io.github.invvk.wgef.abstraction.WGEFUtils;
 import io.github.invvk.wgef.abstraction.flags.helpers.BlockMaterialFlag;
+import io.github.invvk.wgef.abstraction.flags.helpers.EntityTypeFlag;
 import io.github.invvk.wgef.abstraction.flags.helpers.PotionEffectFlag;
 import io.github.invvk.wgef.abstraction.flags.helpers.PotionEffectTypeFlag;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -58,6 +60,9 @@ public final class WGEFlags {
     public final static StateFlag ITEM_DURABILITY = new StateFlag("item-durability", true);
 
     public final static StateFlag VILLAGER_TRADE = new StateFlag("villager-trade", true);
+
+    public final static SetFlag<EntityType> ALLOW_ENTITY_PLACE = new SetFlag<EntityType>("allow-entity-place", new EntityTypeFlag(null));
+    public final static SetFlag<EntityType> DENY_ENTITY_PLACE = new SetFlag<EntityType>("deny-entity-place", new EntityTypeFlag(null));
 
     public static Set<Flag<?>> values() {
         return Arrays.stream(WGEFlags.class.getFields())

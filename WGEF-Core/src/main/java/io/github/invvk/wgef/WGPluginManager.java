@@ -79,6 +79,8 @@ public class WGPluginManager implements IManager {
         registry.register(WGEFlags.NETHER_PORTALS);
         registry.register(WGEFlags.ITEM_DURABILITY);
         registry.register(WGEFlags.VILLAGER_TRADE);
+        registry.register(WGEFlags.ALLOW_ENTITY_PLACE);
+        registry.register(WGEFlags.DENY_ENTITY_PLACE);
 
         this.dependency();
     }
@@ -125,7 +127,8 @@ public class WGPluginManager implements IManager {
                 new NetherPortalListener(this.plugin),
                 new ItemListener(this.plugin),
                 new SpeedListener(this.plugin),
-                new VillagerTradeListener(this.plugin));
+                new VillagerTradeListener(this.plugin),
+                new EntityPlaceListener(this.plugin));
 
         this.updateChecker();
         this.metrics();
