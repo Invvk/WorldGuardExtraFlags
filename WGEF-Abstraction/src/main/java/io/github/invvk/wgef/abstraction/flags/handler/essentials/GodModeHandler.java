@@ -63,14 +63,6 @@ public class GodModeHandler extends AbstractFlagHandler<StateFlag.State> {
         return true;
     }
 
-    @Override
-    public StateFlag.State getInvincibility(LocalPlayer player) {
-        if (this.isEnabled == null)
-            return StateFlag.State.DENY;
-
-        return this.isEnabled ? StateFlag.State.ALLOW : StateFlag.State.DENY;
-    }
-
     private void updateGodMode(LocalPlayer localPlayer, Set<ProtectedRegion> toSet) {
         Player player = WGEFUtils.wrapPlayer(localPlayer);
 
