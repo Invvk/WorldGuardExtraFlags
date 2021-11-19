@@ -44,7 +44,7 @@ public class GiveEffectFlagHandler extends FlagValueChangeHandler<Set<PotionEffe
         this.give_potions = WGEFUtils.queryValueUnchecked(player, player.getWorld(), toSet.getRegions(), WGEFlags.GIVE_EFFECTS);
         if (!player.getActivePotionEffects().isEmpty()) {
             for (PotionEffect effect: player.getActivePotionEffects()) {
-                if (this.give_potions.isEmpty())
+                if (this.give_potions == null || this.give_potions.isEmpty())
                     break;
                 for (PotionEffect e: this.give_potions) {
                     if (effect.getType() == e.getType()) {
