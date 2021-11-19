@@ -39,13 +39,16 @@ public class EntityPlaceListener implements Listener {
         ApplicableRegionSet regions = plugin.getFork().getRegionContainer().createQuery().getApplicableRegions(entity.getLocation());
 
         Set<EntityType> allowedEntityPlacements = WGEFUtils.queryValue(playerWhoPlaced, entity.getWorld(), regions.getRegions(), WGEFlags.ALLOW_ENTITY_PLACE);
-        if (allowedEntityPlacements != null && !allowedEntityPlacements.contains(entity.getType()))
+        if (allowedEntityPlacements != null && !allowedEntityPlacements.contains(entity.getType())) {
             event.setCancelled(true);
+            playerWhoPlaced.updateInventory();
+        }
 
         Set<EntityType> deniedEntityPlacements = WGEFUtils.queryValue(playerWhoPlaced, entity.getWorld(), regions.getRegions(), WGEFlags.DENY_ENTITY_PLACE);
-        if (deniedEntityPlacements != null && deniedEntityPlacements.contains(entity.getType()))
+        if (deniedEntityPlacements != null && deniedEntityPlacements.contains(entity.getType())) {
             event.setCancelled(true);
-        playerWhoPlaced.getEquipment().setItemInMainHand(playerWhoPlaced.getEquipment().getItemInMainHand());
+            playerWhoPlaced.updateInventory();
+        }
     }
 
 }
