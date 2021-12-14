@@ -53,6 +53,6 @@ subprojects {
 
         
         compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:1.17-421'
-        compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:1.17-410'
+        compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:1.17-421'
     }
 }
