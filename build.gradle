@@ -51,7 +51,9 @@ subprojects {
         compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.6'
 
         
-        compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:1.17-422'
-        compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:1.17-422'
+        compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:1.17-425'
+        compileOnly ('com.fastasyncworldedit:FastAsyncWorldEdit-Core:1.17-425') {
+            transitive = false
+        }
     }
 }
