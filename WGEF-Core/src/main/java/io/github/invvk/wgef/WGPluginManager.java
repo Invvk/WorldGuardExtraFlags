@@ -19,7 +19,6 @@ import io.github.invvk.wgef.abstraction.flags.handler.teleport.TeleportEntryHand
 import io.github.invvk.wgef.abstraction.flags.handler.teleport.TeleportExitHandler;
 import io.github.invvk.wgef.abstraction.wrapper.AbstractSessionManagerWrapper;
 import io.github.invvk.wgef.dependency.EssentialsDependency;
-import io.github.invvk.wgef.dependency.FAWEDependency;
 import io.github.invvk.wgef.listeners.*;
 import io.github.invvk.wgef.listeners.essentials.GodModeListener;
 import io.github.invvk.wgef.listeners.we.WorldEditListener;
@@ -38,7 +37,6 @@ import java.util.stream.Collectors;
 public class WGPluginManager implements IManager {
 
     private IEssentialsDependency essentials;
-    private IFAWEDependency fawe;
 
     private IWGFork fork;
 
@@ -66,7 +64,6 @@ public class WGPluginManager implements IManager {
         registry.register(WGEFlags.ALLOW_BLOCK_BREAK);
         registry.register(WGEFlags.DENY_BLOCK_PLACE);
         registry.register(WGEFlags.DENY_BLOCK_BREAK);
-        registry.register(WGEFlags.WORLD_EDIT);
         registry.register(WGEFlags.WALK_SPEED);
         registry.register(WGEFlags.GLIDE);
         registry.register(WGEFlags.FLY);
@@ -89,8 +86,8 @@ public class WGPluginManager implements IManager {
     public void dependency() {
         this.essentials = EssentialsDependency.load(this);
 
-        if (WGEFUtils.isFAWEPresent())
-            this.fawe = FAWEDependency.load(this.plugin);
+        if (!WGEFUtils.isFAWEPresent())
+            this.fork.getFlagReg().register(WGEFlags.WORLD_EDIT);
     }
 
     @Override
@@ -165,7 +162,7 @@ public class WGPluginManager implements IManager {
 
     @Override
     public Optional<IFAWEDependency> getFAWE() {
-        return Optional.ofNullable(fawe);
+        return Optional.empty();
     }
 
     private void registerEvents(Listener... listeners) {
