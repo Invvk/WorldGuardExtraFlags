@@ -28,19 +28,16 @@ public final class CollisionTeamHandler {
 
     public void add() {
         this.checkTeam();
-        if (!this.team.hasEntry(player.getName())) {
+        if (!this.team.hasEntry(player.getName()))
             this.team.addEntry(player.getName());
-            System.out.println("ADDED");
-        }
         this.contains = true;
     }
 
     public void remove() {
         this.checkTeam();
-        if (this.team.hasEntry(player.getName())) {
+        if (this.team.hasEntry(player.getName()))
             this.team.removeEntry(player.getName());
-            System.out.println("REMOVED");
-        }
+
         this.contains = false;
     }
 
