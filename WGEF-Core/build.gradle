@@ -24,7 +24,7 @@ shadowJar {
     archiveClassifier.set('')
     archiveVersion.set('')
 
-    destinationDirectory = file(base117)
+    destinationDirectory = file(base118)
 
     exclude 'META-INF/**'
     exclude 'LICENSE'
