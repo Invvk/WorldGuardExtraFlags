@@ -78,6 +78,7 @@ public class WGPluginManager implements IManager {
         registry.register(WGEFlags.VILLAGER_TRADE);
         registry.register(WGEFlags.ALLOW_ENTITY_PLACE);
         registry.register(WGEFlags.DENY_ENTITY_PLACE);
+        registry.register(WGEFlags.DISABLE_COLLISION);
 
         this.dependency();
     }
@@ -106,6 +107,7 @@ public class WGPluginManager implements IManager {
         sessionManager.registerHandler(FlyFlagHandler.FACTORY);
         sessionManager.registerHandler(WalkSpeedFlagHandler.FACTORY);
         sessionManager.registerHandler(FlySpeedFlagHandler.FACTORY);
+        sessionManager.registerHandler(CollisionFlagHandler.FACTORY);
 
         this.getEssentials().ifPresent(e -> {
             registerEvents(new GodModeListener());
