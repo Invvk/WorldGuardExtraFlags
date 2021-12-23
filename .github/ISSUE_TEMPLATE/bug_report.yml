@@ -28,8 +28,8 @@ body:
       description: Which server version version you using? If your server version is not listed, it is not supported. Update to a supported version first.
       multiple: false
       options:
-        - '1.17.1'
-        - '1.17'
+        - '1.18.1'
+        - '1.18'
     validations:
       required: true
 
@@ -73,7 +73,7 @@ body:
     attributes:
       label: WGEF-Reborn version
       description: What version of WGEF-Reborn are you running? (`/version WGEF-REBORN`)
-      placeholder: "For example: WGEF-REBORN version 2.0.0"
+      placeholder: "For example: WGEF-REBORN version 2.3.0-BETA"
     validations:
       required: true
 
@@ -82,7 +82,7 @@ body:
       label: Checklist
       description: Make sure you have followed each of the steps outlined here.
       options:
-        - label: I'm using java 16+ and running my server in 1.17.1+
+        - label: I'm using java 16+ and running my server in 1.18+
           required: true
         - label: I am using the newest build from https://github.com/Invvk/WorldGuardExtraFlagsPlugin/releases and the issue still persists.
           required: true
