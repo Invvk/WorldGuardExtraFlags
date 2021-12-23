@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.1'
     id 'kr.entree.spigradle' version '2.2.4'
+    id "net.kyori.indra.git" version "2.0.6"
 }
 
 group 'io.github.invvk'
@@ -38,6 +39,7 @@ spigot {
     name 'WGEF-Reborn'
     authors 'Invvk', 'isokissa3'
     apiVersion '1.17'
+    version "${parent.version}+${indraGit.commit().abbreviate(7).name()}"
     depends 'WorldGuard'
     softDepends 'FastAsyncWorldEdit', 'Essentials'
     description 'Adds more flags to WorldGuard to help manage your server easily!'
