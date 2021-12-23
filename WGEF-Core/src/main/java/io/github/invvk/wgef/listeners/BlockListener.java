@@ -54,11 +54,10 @@ public class BlockListener implements Listener {
                     Set<Material> state2 = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.DENY_BLOCK_PLACE);
                     if (state2 != null && state2.contains(type)) {
                         event.setResult(Event.Result.DENY);
-                        return;
                     } else {
                         event.setResult(originalResult);
-                        return;
                     }
+                    return;
                 }
             }
         }
