@@ -10,10 +10,14 @@ version "$parent.version"
 
 repositories {
     mavenCentral()
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
     compileOnly 'net.essentialsx:EssentialsX:2.19.2'
+    compileOnly 'me.clip:placeholderapi:2.11.1'
 
     implementation "org.bstats:bstats-bukkit:2.2.1"
     implementation project(":WGEF-Abstraction")
