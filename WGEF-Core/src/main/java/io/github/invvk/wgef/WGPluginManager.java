@@ -7,7 +7,6 @@ import io.github.invvk.wgef.abstraction.IManager;
 import io.github.invvk.wgef.abstraction.IWGFork;
 import io.github.invvk.wgef.abstraction.WGEFUtils;
 import io.github.invvk.wgef.abstraction.dependencies.IEssentialsDependency;
-import io.github.invvk.wgef.abstraction.dependencies.IFAWEDependency;
 import io.github.invvk.wgef.abstraction.flags.WGEFlags;
 import io.github.invvk.wgef.abstraction.flags.handler.command.CommandOnEntryHandler;
 import io.github.invvk.wgef.abstraction.flags.handler.command.CommandOnExitHandler;
@@ -163,11 +162,6 @@ public class WGPluginManager implements IManager {
     @Override
     public Optional<IEssentialsDependency> getEssentials() {
         return Optional.ofNullable(essentials);
-    }
-
-    @Override
-    public Optional<IFAWEDependency> getFAWE() {
-        return Optional.empty();
     }
 
     private void registerEvents(Listener... listeners) {
