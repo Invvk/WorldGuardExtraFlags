@@ -40,6 +40,7 @@ shadowJar {
 }
 
 spigot {
+    main 'io.github.invvk.wgef.WGEFPlugin'
     name 'WGEF-Reborn'
     authors 'Invvk', 'isokissa3'
     apiVersion '1.17'
