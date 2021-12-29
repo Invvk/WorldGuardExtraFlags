@@ -18,6 +18,12 @@ public class WGEFPlugin extends IWGEFPlugin {
         final File file = new File(this.getDataFolder(), "config.yml");
         if (!file.exists())
             saveResource("config.yml", false);
+
+        if (getConfig().get("disable-block-flag-patch") == null) {
+            getConfig().set("disable-block-flag-patch", false);
+            saveConfig();
+        }
+
         this.manager = new WGPluginManager(this);
         this.manager.load();
         super.onLoad();

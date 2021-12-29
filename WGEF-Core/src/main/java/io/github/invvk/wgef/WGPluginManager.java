@@ -129,6 +129,9 @@ public class WGPluginManager implements IManager {
                 new VillagerTradeListener(this.plugin),
                 new EntityPlaceListener(this.plugin));
 
+        if (!plugin.getConfig().getBoolean("disable-block-flag-patch"))
+            registerEvents(new BlockListenerPatch());
+
         this.updateChecker();
         this.metrics();
     }
