@@ -73,7 +73,7 @@ body:
     attributes:
       label: WGEF-Reborn version
       description: What version of WGEF-Reborn are you running? (`/version WGEF-REBORN`)
-      placeholder: "For example: WGEF-REBORN version 2.2-f2c5e86"
+      placeholder: "For example: WGEF-REBORN version 2.2-beta-f2c5e86"
     validations:
       required: true
 
