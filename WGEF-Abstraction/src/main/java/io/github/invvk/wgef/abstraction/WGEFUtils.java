@@ -95,4 +95,13 @@ public class WGEFUtils {
         return true;
     }
 
+    public static boolean isPAPIPresent() {
+        try {
+            Class.forName("me.clip.placeholderapi.PlaceholderAPI");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
 }

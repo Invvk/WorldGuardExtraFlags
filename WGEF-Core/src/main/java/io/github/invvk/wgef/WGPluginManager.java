@@ -20,6 +20,7 @@ import io.github.invvk.wgef.abstraction.wrapper.AbstractSessionManagerWrapper;
 import io.github.invvk.wgef.dependency.EssentialsDependency;
 import io.github.invvk.wgef.listeners.*;
 import io.github.invvk.wgef.listeners.essentials.GodModeListener;
+import io.github.invvk.wgef.listeners.papi.PAPIChatListener;
 import io.github.invvk.wgef.listeners.we.WorldEditListener;
 import io.github.invvk.wgef.updater.UpdateChecker;
 import io.github.invvk.wgef.v7.IWG7Fork;
@@ -120,7 +121,6 @@ public class WGPluginManager implements IManager {
                 new GlideListener(this.plugin),
                 new FlyListener(this.plugin),
                 new FrostWalkerListener(this.plugin),
-                new ChatListener(this.plugin),
                 new DeathListener(this.plugin),
                 new NetherPortalListener(this.plugin),
                 new ItemListener(this.plugin),
@@ -130,6 +130,11 @@ public class WGPluginManager implements IManager {
 
         if (!plugin.getConfig().getBoolean("disable-block-flag-patch"))
             registerEvents(new BlockListenerPatch());
+
+        if (WGEFUtils.isPAPIPresent())
+            registerEvents(new PAPIChatListener(this.plugin));
+        else
+            registerEvents(new ChatListener(this.plugin));
 
         this.updateChecker();
         this.metrics();
