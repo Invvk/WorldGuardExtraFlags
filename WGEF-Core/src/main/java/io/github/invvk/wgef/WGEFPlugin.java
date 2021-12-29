@@ -2,11 +2,9 @@ package io.github.invvk.wgef;
 
 import io.github.invvk.wgef.abstraction.IWGEFPlugin;
 import io.github.invvk.wgef.abstraction.IWGFork;
-import kr.entree.spigradle.annotations.SpigotPlugin;
 
 import java.io.File;
 
-@SpigotPlugin
 public class WGEFPlugin extends IWGEFPlugin {
 
     private static WGEFPlugin inst;
