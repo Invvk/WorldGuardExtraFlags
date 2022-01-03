@@ -21,6 +21,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 
@@ -98,6 +99,19 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onBoneMeal(BlockFertilizeEvent event) {
         this.handleStructure(event.getBlock().getLocation(), event.getBlocks());
+    }
+
+    @EventHandler
+    public void onBlockDropItem(BlockDropItemEvent event) {
+        Player player = event.getPlayer();
+
+        ApplicableRegionSet regions = this.plugin.getFork().getRegionContainer().createQuery().getApplicableRegions(event.getBlock().getLocation());
+
+        Set<Material> state = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.ALLOWED_BLOCK_DROPS);
+        if (!event.getItems().removeIf(item -> state != null && !state.contains(item.getItemStack().getType()))) {
+            Set<Material> state2 = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.BLOCKED_BLOCK_DROPS);
+            event.getItems().removeIf(item -> state2 != null && state2.contains(item.getItemStack().getType()));
+        }
     }
 
     // Invvk's patch for issue (https://github.com/aromaa/WorldGuardExtraFlagsPlugin/issues/152)

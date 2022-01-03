@@ -66,6 +66,8 @@ public class WGPluginManager implements IManager {
         registry.register(WGEFlags.ALLOW_BLOCK_BREAK);
         registry.register(WGEFlags.DENY_BLOCK_PLACE);
         registry.register(WGEFlags.DENY_BLOCK_BREAK);
+        registry.register(WGEFlags.ALLOWED_BLOCK_DROPS);
+        registry.register(WGEFlags.BLOCKED_BLOCK_DROPS);
         registry.register(WGEFlags.WORLD_EDIT);
         registry.register(WGEFlags.WALK_SPEED);
         registry.register(WGEFlags.GLIDE);
