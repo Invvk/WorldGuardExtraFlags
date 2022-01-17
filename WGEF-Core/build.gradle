@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.1'
-    id 'kr.entree.spigradle' version '2.2.4'
+    id 'kr.entree.spigradle' version '2.3.4'
 }
 
 group 'io.github.invvk'
