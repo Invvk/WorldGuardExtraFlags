@@ -196,13 +196,9 @@ public class WGPluginManager implements IManager {
             final Set<Flag<?>> flags = WGEFlags.values();
             Map<Flag<?>, Integer> valueMap = flags.stream().collect(Collectors.toMap((value) -> value, (v) -> 0));
             WGEFUtils.getFork().getRegionContainer().getLoaded()
-                    .forEach(regionManager -> {
-                        regionManager.getRegions().values().forEach(region -> {
-                            region.getFlags().keySet().forEach(flag -> {
-                                valueMap.computeIfPresent(flag, (key, value) -> value + 1);
-                            });
-                        });
-                    });
+                    .forEach(regionManager -> regionManager.getRegions().values().forEach(region ->
+                            region.getFlags().keySet()
+                            .forEach(flag -> valueMap.computeIfPresent(flag, (key, value) -> value + 1))));
             return valueMap.entrySet().stream().collect(Collectors.toMap((v) -> v.getKey().getName(), Map.Entry::getValue));
         }));
     }
