@@ -24,8 +24,8 @@ public class PAPIChatListener implements Listener {
 
         ApplicableRegionSet regions = this.plugin.getFork().getRegionContainer().createQuery().getApplicableRegions(player.getLocation());
 
-        String prefix = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.CHAT_PREFIX);
-        String suffix = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.CHAT_SUFFIX);
+        String prefix = WGEFUtils.queryValueUnchecked(player, player.getWorld(), regions.getRegions(), WGEFlags.CHAT_PREFIX);
+        String suffix = WGEFUtils.queryValueUnchecked(player, player.getWorld(), regions.getRegions(), WGEFlags.CHAT_SUFFIX);
 
         if (prefix != null)
             event.setFormat(PlaceholderAPI.setPlaceholders(player, prefix) + " " + event.getFormat());

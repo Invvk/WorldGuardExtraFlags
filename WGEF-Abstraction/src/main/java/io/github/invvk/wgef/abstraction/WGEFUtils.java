@@ -55,12 +55,11 @@ public class WGEFUtils {
     }
 
     public static <T> T queryValue(Player player, World world, Set<ProtectedRegion> regions, Flag<T> flag) {
-        return WGEFUtils.createFlagValueCalculator(player, world, regions, flag)
-                .queryValue(WGEFUtils.wrapPlayer(player), flag);
+        return WGEFUtils.createFlagValueCalculator(player, world, regions, flag).queryValue(WGEFUtils.wrapPlayer(player), flag);
     }
 
     public static <T> T queryValueUnchecked(Player player, World world, Set<ProtectedRegion> regions, Flag<T> flag) {
-        return WGEFUtils.createFlagValueCalculator(player, world, regions, flag).queryValue(WGEFUtils.wrapPlayer(player), flag);
+        return WGEFUtils.createFlagValueCalculatorUnchecked(world, regions, flag).queryValue(WGEFUtils.wrapPlayer(player), flag);
     }
 
     public static <T> FlagValueCalculator createFlagValueCalculator(Player player, World world, Set<ProtectedRegion> regions, Flag<T> flag) {
@@ -79,6 +78,12 @@ public class WGEFUtils {
                 global = null;
         }
 
+        return new FlagValueCalculator(checkForRegions, global);
+    }
+
+    public static <T> FlagValueCalculator createFlagValueCalculatorUnchecked(World world, Set<ProtectedRegion> regions, Flag<T> flag) {
+        final List<ProtectedRegion> checkForRegions = List.copyOf(regions);
+        ProtectedRegion global = WGEFUtils.getFork().getRegionContainer().get(world).getRegion(ProtectedRegion.GLOBAL_REGION);
         return new FlagValueCalculator(checkForRegions, global);
     }
 

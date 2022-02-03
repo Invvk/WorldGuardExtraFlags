@@ -45,7 +45,7 @@ public class TeleportEntryHandler extends AbstractFlagHandler<Location> {
     @Override
     protected boolean onSetValue(LocalPlayer localPlayer, Location from, Location to, ApplicableRegionSet toSet, Location currentValue, Location lastValue, MoveType moveType) {
         final Player player = WGEFUtils.wrapPlayer(localPlayer);
-        final Location location = WGEFUtils.queryValueUnchecked(player, player.getWorld(), toSet.getRegions(), WGEFlags.TELEPORT_ON_ENTRY);
+        final Location location = WGEFUtils.queryValue(player, player.getWorld(), toSet.getRegions(), WGEFlags.TELEPORT_ON_ENTRY);
         if (location != null)
             Bukkit.getScheduler().runTaskLater(plugin, () -> localPlayer.teleport(location, "", ""), 1);
         return true;
