@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.1'
-    id 'kr.entree.spigradle' version '2.3.3'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'kr.entree.spigradle' version '2.3.4'
     id "net.kyori.indra.git" version "2.0.6"
 }
 
@@ -19,7 +19,7 @@ dependencies {
     compileOnly 'net.essentialsx:EssentialsX:2.19.2'
     compileOnly 'me.clip:placeholderapi:2.11.1'
 
-    implementation "org.bstats:bstats-bukkit:2.2.1"
+    implementation "org.bstats:bstats-bukkit:3.0.0"
     implementation project(":WGEF-Abstraction")
     implementation project(":WG7")
 }

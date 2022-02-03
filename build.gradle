@@ -36,10 +36,6 @@ subprojects {
             url 'https://repo.essentialsx.net/releases/'
         }
         maven {
-            name = "IntellectualSites Releases"
-            url = uri("https://mvn.intellectualsites.com/content/repositories/releases/")
-        }
-        maven {
             name "spigot-repo"
             url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
         }
@@ -50,10 +46,7 @@ subprojects {
 
         compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.6'
 
-        
-        compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:1.17-425'
-        compileOnly ('com.fastasyncworldedit:FastAsyncWorldEdit-Core:1.17-425') {
-            transitive = false
-        }
+        compileOnly("com.sk89q.worldedit:worldedit-core:7.2")
+        compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2") { transitive = false }
     }
 }
