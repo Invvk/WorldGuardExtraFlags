@@ -72,11 +72,13 @@ public class FlyFlagHandler extends AbstractFlagHandler<StateFlag.State> {
                 this.data = new BooleanVal(player.getAllowFlight());
 
             player.setAllowFlight(false);
+            player.setFlying(false);
             return;
         }
         if (this.data != null) {
             boolean result = this.data.getDefault();
             player.setAllowFlight(result);
+            player.setFlying(result);
             this.data = null;
         }
     }
