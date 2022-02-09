@@ -7,7 +7,6 @@ import io.github.invvk.wgef.abstraction.IManager;
 import io.github.invvk.wgef.abstraction.IWGFork;
 import io.github.invvk.wgef.abstraction.WGEFUtils;
 import io.github.invvk.wgef.abstraction.dependencies.IEssentialsDependency;
-import io.github.invvk.wgef.abstraction.dependencies.IFAWEDependency;
 import io.github.invvk.wgef.abstraction.flags.WGEFlags;
 import io.github.invvk.wgef.abstraction.flags.handler.command.CommandOnEntryHandler;
 import io.github.invvk.wgef.abstraction.flags.handler.command.CommandOnExitHandler;
@@ -19,9 +18,9 @@ import io.github.invvk.wgef.abstraction.flags.handler.teleport.TeleportEntryHand
 import io.github.invvk.wgef.abstraction.flags.handler.teleport.TeleportExitHandler;
 import io.github.invvk.wgef.abstraction.wrapper.AbstractSessionManagerWrapper;
 import io.github.invvk.wgef.dependency.EssentialsDependency;
-import io.github.invvk.wgef.dependency.FAWEDependency;
 import io.github.invvk.wgef.listeners.*;
 import io.github.invvk.wgef.listeners.essentials.GodModeListener;
+import io.github.invvk.wgef.listeners.papi.PAPIChatListener;
 import io.github.invvk.wgef.listeners.we.WorldEditListener;
 import io.github.invvk.wgef.updater.UpdateChecker;
 import io.github.invvk.wgef.v7.IWG7Fork;
@@ -38,7 +37,6 @@ import java.util.stream.Collectors;
 public class WGPluginManager implements IManager {
 
     private IEssentialsDependency essentials;
-    private IFAWEDependency fawe;
 
     private IWGFork fork;
 
@@ -66,7 +64,6 @@ public class WGPluginManager implements IManager {
         registry.register(WGEFlags.ALLOW_BLOCK_BREAK);
         registry.register(WGEFlags.DENY_BLOCK_PLACE);
         registry.register(WGEFlags.DENY_BLOCK_BREAK);
-        registry.register(WGEFlags.WORLD_EDIT);
         registry.register(WGEFlags.WALK_SPEED);
         registry.register(WGEFlags.GLIDE);
         registry.register(WGEFlags.FLY);
@@ -81,6 +78,7 @@ public class WGPluginManager implements IManager {
         registry.register(WGEFlags.VILLAGER_TRADE);
         registry.register(WGEFlags.ALLOW_ENTITY_PLACE);
         registry.register(WGEFlags.DENY_ENTITY_PLACE);
+        registry.register(WGEFlags.DISABLE_COLLISION);
 
         this.dependency();
     }
@@ -89,8 +87,8 @@ public class WGPluginManager implements IManager {
     public void dependency() {
         this.essentials = EssentialsDependency.load(this);
 
-        if (WGEFUtils.isFAWEPresent())
-            this.fawe = FAWEDependency.load(this.plugin);
+        if (!WGEFUtils.isFAWEPresent())
+            this.fork.getFlagReg().register(WGEFlags.WORLD_EDIT);
     }
 
     @Override
@@ -109,6 +107,7 @@ public class WGPluginManager implements IManager {
         sessionManager.registerHandler(FlyFlagHandler.FACTORY);
         sessionManager.registerHandler(WalkSpeedFlagHandler.FACTORY);
         sessionManager.registerHandler(FlySpeedFlagHandler.FACTORY);
+        sessionManager.registerHandler(CollisionFlagHandler.FACTORY);
 
         this.getEssentials().ifPresent(e -> {
             registerEvents(new GodModeListener());
@@ -122,13 +121,20 @@ public class WGPluginManager implements IManager {
                 new GlideListener(this.plugin),
                 new FlyListener(this.plugin),
                 new FrostWalkerListener(this.plugin),
-                new ChatListener(this.plugin),
                 new DeathListener(this.plugin),
                 new NetherPortalListener(this.plugin),
                 new ItemListener(this.plugin),
                 new SpeedListener(this.plugin),
                 new VillagerTradeListener(this.plugin),
                 new EntityPlaceListener(this.plugin));
+
+        if (!plugin.getConfig().getBoolean("disable-block-flag-patch"))
+            registerEvents(new BlockListenerPatch());
+
+        if (WGEFUtils.isPAPIPresent())
+            registerEvents(new PAPIChatListener(this.plugin));
+        else
+            registerEvents(new ChatListener(this.plugin));
 
         this.updateChecker();
         this.metrics();
@@ -163,11 +169,6 @@ public class WGPluginManager implements IManager {
         return Optional.ofNullable(essentials);
     }
 
-    @Override
-    public Optional<IFAWEDependency> getFAWE() {
-        return Optional.ofNullable(fawe);
-    }
-
     private void registerEvents(Listener... listeners) {
         for (Listener listener : listeners)
             Bukkit.getPluginManager().registerEvents(listener, this.plugin);
@@ -195,13 +196,9 @@ public class WGPluginManager implements IManager {
             final Set<Flag<?>> flags = WGEFlags.values();
             Map<Flag<?>, Integer> valueMap = flags.stream().collect(Collectors.toMap((value) -> value, (v) -> 0));
             WGEFUtils.getFork().getRegionContainer().getLoaded()
-                    .forEach(regionManager -> {
-                        regionManager.getRegions().values().forEach(region -> {
-                            region.getFlags().keySet().forEach(flag -> {
-                                valueMap.computeIfPresent(flag, (key, value) -> value + 1);
-                            });
-                        });
-                    });
+                    .forEach(regionManager -> regionManager.getRegions().values().forEach(region ->
+                            region.getFlags().keySet()
+                            .forEach(flag -> valueMap.computeIfPresent(flag, (key, value) -> value + 1))));
             return valueMap.entrySet().stream().collect(Collectors.toMap((v) -> v.getKey().getName(), Map.Entry::getValue));
         }));
     }

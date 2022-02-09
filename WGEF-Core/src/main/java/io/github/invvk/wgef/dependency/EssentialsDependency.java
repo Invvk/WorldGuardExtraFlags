@@ -8,10 +8,8 @@ import io.github.invvk.wgef.abstraction.IManager;
 import io.github.invvk.wgef.abstraction.WGEFUtils;
 import io.github.invvk.wgef.abstraction.dependencies.IEssentialsDependency;
 import io.github.invvk.wgef.abstraction.flags.WGEFlags;
-import io.github.invvk.wgef.abstraction.flags.handler.essentials.GodModeHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 public class EssentialsDependency implements IEssentialsDependency {
 
@@ -19,7 +17,6 @@ public class EssentialsDependency implements IEssentialsDependency {
 
     private boolean isEnabled;
 
-    @Nullable
     public static EssentialsDependency load(IManager iManager) {
         if (Bukkit.getPluginManager().getPlugin("Essentials") == null)
             return null;

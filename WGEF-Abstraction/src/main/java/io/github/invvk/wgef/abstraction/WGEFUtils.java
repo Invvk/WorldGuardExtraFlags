@@ -55,12 +55,11 @@ public class WGEFUtils {
     }
 
     public static <T> T queryValue(Player player, World world, Set<ProtectedRegion> regions, Flag<T> flag) {
-        return WGEFUtils.createFlagValueCalculator(player, world, regions, flag)
-                .queryValue(WGEFUtils.wrapPlayer(player), flag);
+        return WGEFUtils.createFlagValueCalculator(player, world, regions, flag).queryValue(WGEFUtils.wrapPlayer(player), flag);
     }
 
     public static <T> T queryValueUnchecked(Player player, World world, Set<ProtectedRegion> regions, Flag<T> flag) {
-        return WGEFUtils.createFlagValueCalculator(player, world, regions, flag).queryValue(WGEFUtils.wrapPlayer(player), flag);
+        return WGEFUtils.createFlagValueCalculatorUnchecked(world, regions, flag).queryValue(WGEFUtils.wrapPlayer(player), flag);
     }
 
     public static <T> FlagValueCalculator createFlagValueCalculator(Player player, World world, Set<ProtectedRegion> regions, Flag<T> flag) {
@@ -82,6 +81,12 @@ public class WGEFUtils {
         return new FlagValueCalculator(checkForRegions, global);
     }
 
+    public static <T> FlagValueCalculator createFlagValueCalculatorUnchecked(World world, Set<ProtectedRegion> regions, Flag<T> flag) {
+        final List<ProtectedRegion> checkForRegions = List.copyOf(regions);
+        ProtectedRegion global = WGEFUtils.getFork().getRegionContainer().get(world).getRegion(ProtectedRegion.GLOBAL_REGION);
+        return new FlagValueCalculator(checkForRegions, global);
+    }
+
     public static boolean isDeny(StateFlag.State state) {
         return state == StateFlag.State.DENY;
     }
@@ -89,6 +94,15 @@ public class WGEFUtils {
     public static boolean isFAWEPresent() {
         try {
             Class.forName("com.fastasyncworldedit.core.regions.FaweMaskManager");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isPAPIPresent() {
+        try {
+            Class.forName("me.clip.placeholderapi.PlaceholderAPI");
         } catch (ClassNotFoundException e) {
             return false;
         }

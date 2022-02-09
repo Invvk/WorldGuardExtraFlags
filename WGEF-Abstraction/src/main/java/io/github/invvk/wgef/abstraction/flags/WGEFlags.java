@@ -64,6 +64,8 @@ public final class WGEFlags {
     public final static SetFlag<EntityType> ALLOW_ENTITY_PLACE = new SetFlag<EntityType>("allow-entity-place", new EntityTypeFlag(null));
     public final static SetFlag<EntityType> DENY_ENTITY_PLACE = new SetFlag<EntityType>("deny-entity-place", new EntityTypeFlag(null));
 
+    public final static BooleanFlag DISABLE_COLLISION = new BooleanFlag("disable-collision");
+
     public static Set<Flag<?>> values() {
         return Arrays.stream(WGEFlags.class.getFields())
                 .map(field -> {

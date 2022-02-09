@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'io.github.invvk'
-version '2.2.0'
+version '2.3-stable'
 
 repositories {
     mavenCentral()
@@ -29,7 +29,6 @@ subprojects {
     repositories {
         mavenCentral()
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
         maven { url "https://maven.enginehub.org/repo/" }
         maven { url "https://repo.dmulloy2.net/repository/public/" }
         maven {
@@ -37,22 +36,17 @@ subprojects {
             url 'https://repo.essentialsx.net/releases/'
         }
         maven {
-            name = "IntellectualSites Releases"
-            url = uri("https://mvn.intellectualsites.com/content/repositories/releases/")
-        }
-        maven {
-            name "nms-repo"
-            url 'https://repo.codemc.org/repository/nms/'
+            name "spigot-repo"
+            url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
         }
     }
 
     dependencies {
-        compileOnly 'org.spigotmc:spigot:1.17-R0.1-SNAPSHOT'
+        compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
 
         compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.6'
 
-        
-        compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:1.17-422'
-        compileOnly 'com.fastasyncworldedit:FastAsyncWorldEdit-Core:1.17-422'
+        compileOnly("com.sk89q.worldedit:worldedit-core:7.2")
+        compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2") { transitive = false }
     }
 }

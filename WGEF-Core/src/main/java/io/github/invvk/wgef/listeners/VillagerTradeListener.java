@@ -5,16 +5,11 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import io.github.invvk.wgef.WGEFPlugin;
 import io.github.invvk.wgef.abstraction.WGEFUtils;
 import io.github.invvk.wgef.abstraction.flags.WGEFlags;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftVillager;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.InventoryHolder;
 
 public class VillagerTradeListener implements Listener {
 
