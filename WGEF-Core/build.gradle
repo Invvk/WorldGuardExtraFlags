@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'net.essentialsx:EssentialsX:2.19.2'
+    compileOnly 'net.essentialsx:EssentialsX:2.19.3'
     compileOnly 'me.clip:placeholderapi:2.11.1'
 
     implementation "org.bstats:bstats-bukkit:3.0.0"
