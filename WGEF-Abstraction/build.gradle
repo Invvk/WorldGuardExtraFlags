@@ -10,5 +10,5 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'net.essentialsx:EssentialsX:2.19.3'
+    compileOnly 'net.essentialsx:EssentialsX:2.19.4'
 }
