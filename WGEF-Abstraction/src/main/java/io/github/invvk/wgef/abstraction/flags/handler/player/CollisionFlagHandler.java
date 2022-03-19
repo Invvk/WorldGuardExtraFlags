@@ -54,7 +54,6 @@ public class CollisionFlagHandler extends AbstractFlagHandler<Boolean> {
 
     @Override
     protected boolean onAbsentValue(LocalPlayer localPlayer, Location from, Location to, ApplicableRegionSet set, Set<ProtectedRegion> exited, Boolean lastValue, MoveType moveType) {
-        Player player = WGEFUtils.wrapPlayer(localPlayer);
         this.teamHandler.remove();
         return true;
     }

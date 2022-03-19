@@ -6,7 +6,7 @@ import org.bukkit.scoreboard.Team;
 
 public final class CollisionTeamHandler {
 
-    public static final String TEAM_NAME = "WGEF_NO_COLLISION";
+    public static final String TEAM_NAME = "WGEF_COLLISION";
 
     private Team team;
 
