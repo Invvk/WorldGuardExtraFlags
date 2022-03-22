@@ -1,0 +1,3 @@
+# This is where gradle will build your jar.
+# 118 here means 1.18 server directory.
+base118=YOUR_SERVER_PLUGINS_DIRECTORY_HERE
