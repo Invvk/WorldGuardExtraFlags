@@ -3,18 +3,17 @@ package io.github.invvk.wgef.listeners;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.*;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import com.sk89q.worldguard.bukkit.event.Handleable;
 import com.sk89q.worldguard.bukkit.event.entity.DamageEntityEvent;
 import com.sk89q.worldguard.bukkit.event.entity.DestroyEntityEvent;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.SetFlag;
 import io.github.invvk.wgef.WGEFPlugin;
 import io.github.invvk.wgef.abstraction.WGEFUtils;
 import io.github.invvk.wgef.abstraction.flags.WGEFlags;
-
-import java.util.Set;
 
 public final class EntityBreakListener implements Listener {
 
@@ -31,38 +30,34 @@ public final class EntityBreakListener implements Listener {
             return;
         }
 
-        handleEntityEvent(WGEFlags.ALLOW_ENTITY_DAMAGE, WGEFlags.DENY_ENTITY_DAMAGE, damager, e, e.getEntity().getType(), e.getTarget());
+        e.setResult(resolveBreakResult(damager, e.getEntity().getType(), e.getTarget(), WGEFlags.ALLOW_ENTITY_DAMAGE, WGEFlags.DENY_ENTITY_DAMAGE));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDestroy(DestroyEntityEvent e) {
-        final var cause = e.getCause().getFirstPlayer();
-        if (cause == null) {
+        final var player = e.getCause().getFirstPlayer();
+        if (player == null) {
             return;
         }
 
-        handleEntityEvent(WGEFlags.ALLOW_ENTITY_DESTROY, WGEFlags.DENY_ENTITY_DESTROY, cause, e, e.getEntity().getType(), e.getTarget());
+        e.setResult(resolveBreakResult(player, e.getEntity().getType(), e.getTarget(), WGEFlags.ALLOW_ENTITY_DESTROY, WGEFlags.DENY_ENTITY_DESTROY));
     }
 
-    private void handleEntityEvent(SetFlag<EntityType> allowFlag, SetFlag<EntityType> denyFlag, Player playerWhoPlaced, Cancellable event, EntityType entityType, Location location) {
-        ApplicableRegionSet regions = plugin.getFork().getRegionContainer().createQuery().getApplicableRegions(location);
 
-        Set<EntityType> allowed = WGEFUtils.queryValue(playerWhoPlaced, location.getWorld(), regions.getRegions(), allowFlag);
-        if (allowed != null) {
-            if (!allowed.contains(entityType)) {
-                event.setCancelled(true);
-                return;
-            } else if (event instanceof Handleable handleable) {
-                handleable.setResult(Event.Result.ALLOW);
-                return;
-            }
+    private Event.Result resolveBreakResult(final Player player, final EntityType type, final Location location, final SetFlag<EntityType> allowFlag, final SetFlag<EntityType> denyFlag) {
+        final var regions = plugin.getFork().getRegionContainer().createQuery().getApplicableRegions(location);
+
+        final var allowed = WGEFUtils.queryValue(player, location.getWorld(), regions.getRegions(), allowFlag);
+        if (allowed != null && allowed.contains(type)) {
+            return Event.Result.ALLOW;
         }
 
-
-        Set<EntityType> denied = WGEFUtils.queryValue(playerWhoPlaced, location.getWorld(), regions.getRegions(), denyFlag);
-        if (denied != null && denied.contains(entityType)) {
-            event.setCancelled(true);
+        final var denied = WGEFUtils.queryValue(player, location.getWorld(), regions.getRegions(), denyFlag);
+        if (denied != null && denied.contains(type)) {
+            return Event.Result.DENY;
         }
+
+        return Event.Result.DEFAULT;
     }
 
 }
