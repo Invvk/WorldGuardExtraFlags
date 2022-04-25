@@ -58,7 +58,15 @@ public class EntityPlaceListener implements Listener {
             return;
         }
 
-        e.setResult(resolvePlaceResult(original.getPlayer(), e.getEffectiveType(), e.getTarget()));
+        final var result = resolvePlaceResult(original.getPlayer(), e.getEffectiveType(), e.getTarget());
+
+        if (result != Event.Result.DEFAULT) {
+            e.setResult(result);
+
+            if (result == Event.Result.DENY) {
+                original.getPlayer().updateInventory();
+            }
+        }
     }
 
     private Event.Result resolvePlaceResult(final Player player, final EntityType type, final Location location) {
@@ -74,7 +82,7 @@ public class EntityPlaceListener implements Listener {
             return Event.Result.DENY;
         }
 
-        return Event.Result.DENY;
+        return Event.Result.DEFAULT;
     }
 
 }
