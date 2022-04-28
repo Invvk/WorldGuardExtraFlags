@@ -78,6 +78,10 @@ public class WGPluginManager implements IManager {
         registry.register(WGEFlags.VILLAGER_TRADE);
         registry.register(WGEFlags.ALLOW_ENTITY_PLACE);
         registry.register(WGEFlags.DENY_ENTITY_PLACE);
+        registry.register(WGEFlags.ALLOW_ENTITY_DAMAGE);
+        registry.register(WGEFlags.DENY_ENTITY_DAMAGE);
+        registry.register(WGEFlags.ALLOW_ENTITY_DESTROY);
+        registry.register(WGEFlags.DENY_ENTITY_DESTROY);
         registry.register(WGEFlags.DISABLE_COLLISION);
 
         this.dependency();
@@ -126,7 +130,8 @@ public class WGPluginManager implements IManager {
                 new ItemListener(this.plugin),
                 new SpeedListener(this.plugin),
                 new VillagerTradeListener(this.plugin),
-                new EntityPlaceListener(this.plugin));
+                new EntityPlaceListener(this.plugin),
+                new EntityBreakListener(this.plugin));
 
         if (!plugin.getConfig().getBoolean("disable-block-flag-patch"))
             registerEvents(new BlockListenerPatch());
