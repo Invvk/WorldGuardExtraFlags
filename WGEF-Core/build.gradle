@@ -46,6 +46,6 @@ spigot {
     apiVersion '1.17'
     version "${parent.version}+${indraGit.commit().abbreviate(7).name()}"
     depends 'WorldGuard'
-    softDepends 'FastAsyncWorldEdit', 'Essentials'
+    softDepends 'FastAsyncWorldEdit', 'Essentials', 'TAB'
     description 'Adds more flags to WorldGuard to help manage your server easily!'
 }
