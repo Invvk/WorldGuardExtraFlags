@@ -7,8 +7,12 @@ version "$parent.version"
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://repo.kryptonmc.org/releases'
+    }
 }
 
 dependencies {
     compileOnly 'net.essentialsx:EssentialsX:2.19.3'
+    compileOnly 'me.neznamy:tab-api:3.0.2'
 }
