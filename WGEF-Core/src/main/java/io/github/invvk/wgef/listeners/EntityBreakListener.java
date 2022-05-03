@@ -3,6 +3,7 @@ package io.github.invvk.wgef.listeners;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,6 +16,8 @@ import io.github.invvk.wgef.WGEFPlugin;
 import io.github.invvk.wgef.abstraction.WGEFUtils;
 import io.github.invvk.wgef.abstraction.flags.WGEFlags;
 
+import java.util.Objects;
+
 public final class EntityBreakListener implements Listener {
 
     private final WGEFPlugin plugin;
@@ -26,11 +29,15 @@ public final class EntityBreakListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(DamageEntityEvent e) {
-        if (!(e.getOriginalEvent() instanceof EntityDamageByEntityEvent original) || !(original.getDamager() instanceof Player damager)) {
+        if (!(e.getOriginalEvent() instanceof EntityDamageByEntityEvent original)) {
             return;
         }
 
-        e.setResult(resolveBreakResult(damager, e.getEntity().getType(), e.getTarget(), WGEFlags.ALLOW_ENTITY_DAMAGE, WGEFlags.DENY_ENTITY_DAMAGE));
+        if (original.getDamager() instanceof Player player) {
+            e.setResult(resolveBreakResult(player, e.getEntity().getType(), e.getTarget(), WGEFlags.ALLOW_ENTITY_DAMAGE, WGEFlags.DENY_ENTITY_DAMAGE));
+        } else if (original.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Player player) {
+            e.setResult(resolveBreakResult(player, e.getEntity().getType(), e.getTarget(), WGEFlags.ALLOW_ENTITY_DAMAGE, WGEFlags.DENY_ENTITY_DAMAGE));
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
