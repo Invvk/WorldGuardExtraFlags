@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
-import org.bukkit.util.Vector;
 
 public class FlyListener implements Listener {
 
@@ -27,6 +26,7 @@ public class FlyListener implements Listener {
         if (WGEFUtils.isDeny(state)) {
             if (player.getAllowFlight()) {
                 player.setAllowFlight(false);
+                player.setFlying(false);
                 player.teleport(player.getLocation());
             }
 

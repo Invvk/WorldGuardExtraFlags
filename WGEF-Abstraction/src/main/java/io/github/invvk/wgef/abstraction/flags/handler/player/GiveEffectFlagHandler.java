@@ -41,7 +41,7 @@ public class GiveEffectFlagHandler extends FlagValueChangeHandler<Set<PotionEffe
     @Override
     protected boolean onSetValue(LocalPlayer localPlayer, Location from, Location to, ApplicableRegionSet toSet, Set<PotionEffect> currentValue, Set<PotionEffect> lastValue, MoveType moveType) {
         final Player player = WGEFUtils.wrapPlayer(localPlayer);
-        this.give_potions = WGEFUtils.queryValueUnchecked(player, player.getWorld(), toSet.getRegions(), WGEFlags.GIVE_EFFECTS);
+        this.give_potions = WGEFUtils.queryValue(player, player.getWorld(), toSet.getRegions(), WGEFlags.GIVE_EFFECTS);
         if (!player.getActivePotionEffects().isEmpty()) {
             for (PotionEffect effect: player.getActivePotionEffects()) {
                 if (this.give_potions == null || this.give_potions.isEmpty())
@@ -71,7 +71,7 @@ public class GiveEffectFlagHandler extends FlagValueChangeHandler<Set<PotionEffe
                 });
             }
         }
-        this.give_potions = WGEFUtils.queryValueUnchecked(player, player.getWorld(), toSet.getRegions(), WGEFlags.GIVE_EFFECTS);
+        this.give_potions = WGEFUtils.queryValue(player, player.getWorld(), toSet.getRegions(), WGEFlags.GIVE_EFFECTS);
         this.handleValue(player, this.give_potions);
         return true;
     }
@@ -79,7 +79,7 @@ public class GiveEffectFlagHandler extends FlagValueChangeHandler<Set<PotionEffe
     @Override
     public void tick(LocalPlayer localPlayer, ApplicableRegionSet set) {
         final Player player = WGEFUtils.wrapPlayer(localPlayer);
-        this.give_potions = WGEFUtils.queryValueUnchecked(player, player.getWorld(), set.getRegions(), WGEFlags.GIVE_EFFECTS);
+        this.give_potions = WGEFUtils.queryValue(player, player.getWorld(), set.getRegions(), WGEFlags.GIVE_EFFECTS);
         this.handleValue(player, this.give_potions);
     }
 

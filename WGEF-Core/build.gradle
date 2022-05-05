@@ -1,7 +1,8 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.1'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'kr.entree.spigradle' version '2.2.4'
+    id "net.kyori.indra.git" version "2.1.1"
 }
 
 group 'io.github.invvk'
@@ -9,12 +10,16 @@ version "$parent.version"
 
 repositories {
     mavenCentral()
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
-    compileOnly 'net.essentialsx:EssentialsX:2.19.2'
+    compileOnly 'net.essentialsx:EssentialsX:2.19.4'
+    compileOnly 'me.clip:placeholderapi:2.11.1'
 
-    implementation "org.bstats:bstats-bukkit:2.2.1"
+    implementation "org.bstats:bstats-bukkit:3.0.0"
     implementation project(":WGEF-Abstraction")
     implementation project(":WG7")
 }
@@ -24,7 +29,7 @@ shadowJar {
     archiveClassifier.set('')
     archiveVersion.set('')
 
-    destinationDirectory = file(base117)
+    destinationDirectory = file(base118)
 
     exclude 'META-INF/**'
     exclude 'LICENSE'
@@ -35,10 +40,12 @@ shadowJar {
 }
 
 spigot {
+    main 'io.github.invvk.wgef.WGEFPlugin'
     name 'WGEF-Reborn'
     authors 'Invvk', 'isokissa3'
     apiVersion '1.17'
+    version "${parent.version}+${indraGit.commit().abbreviate(7).name()}"
     depends 'WorldGuard'
-    softDepends 'FastAsyncWorldEdit', 'Essentials'
+    softDepends 'FastAsyncWorldEdit', 'Essentials', 'TAB'
     description 'Adds more flags to WorldGuard to help manage your server easily!'
 }
