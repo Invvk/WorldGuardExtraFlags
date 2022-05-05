@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'io.github.invvk'
-version '2.6-stable'
+version '2.7-stable'
 
 repositories {
     mavenCentral()
