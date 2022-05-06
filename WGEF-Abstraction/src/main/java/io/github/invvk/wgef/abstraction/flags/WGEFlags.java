@@ -2,10 +2,8 @@ package io.github.invvk.wgef.abstraction.flags;
 
 import com.sk89q.worldguard.protection.flags.*;
 import io.github.invvk.wgef.abstraction.WGEFUtils;
-import io.github.invvk.wgef.abstraction.flags.helpers.BlockMaterialFlag;
+import io.github.invvk.wgef.abstraction.flags.helpers.*;
 import io.github.invvk.wgef.abstraction.flags.helpers.EntityTypeFlag;
-import io.github.invvk.wgef.abstraction.flags.helpers.PotionEffectFlag;
-import io.github.invvk.wgef.abstraction.flags.helpers.PotionEffectTypeFlag;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffect;
@@ -54,6 +52,9 @@ public final class WGEFlags {
     public final static SetFlag<Material> DENY_BLOCK_PLACE = new SetFlag<Material>("deny-block-place", new BlockMaterialFlag(null));
     public final static SetFlag<Material> ALLOW_BLOCK_BREAK = new SetFlag<Material>("allow-block-break", new BlockMaterialFlag(null));
     public final static SetFlag<Material> DENY_BLOCK_BREAK = new SetFlag<Material>("deny-block-break", new BlockMaterialFlag(null));
+
+    public final static SetFlag<Material> ALLOWED_BLOCK_DROPS = new SetFlag<>("allowed-block-drops", new MaterialFlag(null));
+    public final static SetFlag<Material> BLOCKED_BLOCK_DROPS = new SetFlag<>("blocked-block-drops", new MaterialFlag(null));
 
     public final static StateFlag GLIDE = new StateFlag("glide", true);
 

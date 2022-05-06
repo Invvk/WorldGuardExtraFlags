@@ -13,6 +13,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDropItemEvent;
 
 import java.util.Set;
 
@@ -75,6 +76,20 @@ public class BlockListener implements Listener {
                     return;
                 }
             }
+        }
+    }
+  
+    // [Invvk] merge conflicts
+    @EventHandler
+    public void onBlockDropItem(BlockDropItemEvent event) {
+        Player player = event.getPlayer();
+
+        ApplicableRegionSet regions = this.plugin.getFork().getRegionContainer().createQuery().getApplicableRegions(event.getBlock().getLocation());
+
+        Set<Material> state = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.ALLOWED_BLOCK_DROPS);
+        if (!event.getItems().removeIf(item -> state != null && !state.contains(item.getItemStack().getType()))) {
+            Set<Material> state2 = WGEFUtils.queryValue(player, player.getWorld(), regions.getRegions(), WGEFlags.BLOCKED_BLOCK_DROPS);
+            event.getItems().removeIf(item -> state2 != null && state2.contains(item.getItemStack().getType()));
         }
     }
 
