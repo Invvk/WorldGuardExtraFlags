@@ -13,6 +13,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'net.essentialsx:EssentialsX:2.19.3'
+    compileOnly 'net.essentialsx:EssentialsX:2.19.4'
     compileOnly 'me.neznamy:tab-api:3.1.2'
 }
